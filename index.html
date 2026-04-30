@@ -22,23 +22,26 @@
         #sidebar { width: var(--sidebar-width); background: var(--panel-dark); border-right: 1px solid #333; display: flex; flex-direction: column; padding: 30px 20px; box-sizing: border-box; }
         .sidebar-header { font-size: 1.8rem; color: var(--primary); margin-bottom: 2.5rem; letter-spacing: -1px; }
 
-        /* SMOOTH WAVE ANIMATION */
+        /* LIQUID WAVE BUTTONS */
         .nav-link { 
             display: flex; align-items: center; padding: 12px 15px; color: #ccc; text-decoration: none; border-radius: 8px; 
             margin-bottom: 15px; background: #262626; font-size: 0.95rem; gap: 12px;
             position: relative; overflow: hidden; border: 1px solid #333; z-index: 1; transition: color 0.4s;
         }
         .nav-link::before {
-            content: ""; position: absolute; left: 50%; bottom: -160%; width: 250%; height: 250%;
-            border-radius: 38%; transform: translateX(-50%); transition: bottom 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: -1;
+            content: ""; position: absolute; left: 50%; bottom: -150%; width: 350px; height: 350px;
+            background: rgba(255,255,255,0.1); border-radius: 43%; 
+            transform: translateX(-50%) rotate(0deg); 
+            transition: bottom 0.7s cubic-bezier(0.4, 0, 0.2, 1); z-index: -1;
         }
-        .nav-link.discord:hover::before { bottom: -60%; background: var(--discord-blue); animation: smoothWave 3s infinite linear; }
-        .nav-link.youtube:hover::before { bottom: -60%; background: var(--youtube-red); animation: smoothWave 3s infinite linear; }
-        .nav-link:hover { color: white; border-color: rgba(255,255,255,0.1); }
+        .nav-link.discord:hover::before { bottom: -70%; background: var(--discord-blue); animation: liquid 3.5s infinite linear; }
+        .nav-link.youtube:hover::before { bottom: -70%; background: var(--youtube-red); animation: liquid 3.5s infinite linear; }
+        .nav-link:hover { color: white; border-color: rgba(255,255,255,0.2); }
 
-        @keyframes smoothWave {
-            0% { transform: translateX(-50%) rotate(0deg); }
-            100% { transform: translateX(-50%) rotate(360deg); }
+        @keyframes liquid {
+            0% { transform: translateX(-50%) rotate(0deg); border-radius: 43% 47% 41% 49% / 46% 42% 48% 44%; }
+            50% { transform: translateX(-50%) rotate(180deg); border-radius: 48% 42% 46% 44% / 43% 47% 41% 49%; }
+            100% { transform: translateX(-50%) rotate(360deg); border-radius: 43% 47% 41% 49% / 46% 42% 48% 44%; }
         }
 
         #main-content { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 40px; }
@@ -63,37 +66,23 @@
         .channel-item:hover { background: #3d3d3d; }
         .channel-item img { width: 32px; height: 32px; border: 1px solid #555; border-radius: 50%; }
 
-        /* MOVING DOTTED BORDER (MARCHING ANTS) */
+        /* REVERTED MARCHING ANTS BORDER */
         #canvas-container { 
             margin-top: 10px; border-radius: 12px; background-color: #1a1a1a; display: inline-block; 
-            position: relative; padding: 8px; overflow: hidden;
-        }
-        #canvas-container::after {
-            content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            border: 3px dashed #555; border-radius: 12px; pointer-events: none;
-            animation: ants 20s linear infinite;
-        }
-        #canvas-container.loaded::after { display: none; }
-        
-        @keyframes ants {
-            0% { stroke-dashoffset: 0; border-style: dashed; }
-            /* We simulate the movement by slightly shifting the background position or using dash properties if it were SVG, 
-               but for CSS border, we use a simple dash-offset simulation */
-            from { outline: 2px dashed #444; outline-offset: -4px; }
-            to { outline: 2px dashed #444; outline-offset: -4px; }
-        }
-        /* Refined Marching Ants using background-image for actual movement */
-        .ants-border {
+            position: relative; padding: 12px; transition: all 0.3s;
             background-image: linear-gradient(90deg, #444 50%, transparent 50%), linear-gradient(90deg, #444 50%, transparent 50%), linear-gradient(0deg, #444 50%, transparent 50%), linear-gradient(0deg, #444 50%, transparent 50%);
             background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
-            background-size: 15px 2px, 15px 2px, 2px 15px, 2px 15px;
+            background-size: 15px 3px, 15px 3px, 3px 15px, 3px 15px;
             background-position: 0 0, 0 100%, 0 0, 100% 0;
-            animation: border-dance 0.4s infinite linear;
+            animation: border-crawl 0.6s infinite linear;
         }
-        @keyframes border-dance {
+        
+        @keyframes border-crawl {
             0% { background-position: 0 0, 0 100%, 0 0, 100% 0; }
             100% { background-position: 15px 0, -15px 100%, 0 -15px, 100% 15px; }
         }
+
+        #canvas-container.loaded { background-image: none; padding: 0; }
 
         canvas { max-width: 100%; height: auto; display: block; border-radius: 8px; position: relative; z-index: 2; }
         button#download-btn { background: var(--primary); border: none; padding: 14px 28px; color: white; cursor: pointer; border-radius: 8px; font-weight: bold; margin-top: 2rem; display: none; }
@@ -122,14 +111,14 @@
             <p style="font-size: 0.8rem; color: #666; margin: 0;">— OR —</p>
             <input type="file" id="upload" accept="image/*" style="background: #2d2d2d; padding: 12px; border-radius: 8px; border: 1px solid #444; color: white; width: 100%; max-width: 300px;">
         </div>
-        <div id="canvas-container" class="ants-border">
+        <div id="canvas-container">
             <canvas id="mainCanvas"></canvas>
         </div>
         <button id="download-btn">Download Map</button>
     </div>
 </main>
 
-<div class="version-tag">Mapify v2.5.4</div>
+<div class="version-tag">Mapify v2.5.5</div>
 
 <script>
     const presetDisplay = document.getElementById('preset-display');
@@ -182,8 +171,7 @@
     });
 
     function processImage(img) {
-        canvasContainer.classList.remove('ants-border');
-        canvasContainer.style.background = "transparent";
+        canvasContainer.classList.add('loaded');
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
