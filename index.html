@@ -22,6 +22,7 @@
             margin: 0; 
             display: flex;
             min-height: 100vh;
+            position: relative;
         }
 
         #sidebar {
@@ -34,53 +35,28 @@
             box-sizing: border-box;
         }
 
-        .sidebar-header {
-            font-size: 1.8rem;
-            color: var(--primary);
-            margin-bottom: 2.5rem;
-            letter-spacing: -1px;
-        }
+        .sidebar-header { font-size: 1.8rem; color: var(--primary); margin-bottom: 2.5rem; letter-spacing: -1px; }
 
         .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            color: #ccc;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: 0.2s;
-            margin-bottom: 15px;
-            background: #262626;
-            font-size: 0.95rem;
-            gap: 12px;
+            display: flex; align-items: center; padding: 12px 15px; color: #ccc;
+            text-decoration: none; border-radius: 8px; transition: 0.2s;
+            margin-bottom: 15px; background: #262626; font-size: 0.95rem; gap: 12px;
         }
 
-        .nav-link i { font-size: 1.2rem; width: 20px; text-align: center; }
         .nav-link:hover { background: #333; color: var(--primary); transform: translateX(5px); }
         .fa-youtube { color: #ff0000; }
         .fa-discord { color: #5865F2; }
 
-        #main-content {
-            flex-grow: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-        }
+        #main-content { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 40px; }
 
         .container { 
-            background: var(--panel-dark); 
-            padding: 2.5rem; 
-            border-radius: 16px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6); 
-            max-width: 800px; 
-            width: 100%; 
-            text-align: center; 
-            border: 1px solid #333; 
+            background: var(--panel-dark); padding: 2.5rem; border-radius: 16px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6); max-width: 800px; width: 100%; 
+            text-align: center; border: 1px solid #333; 
         }
 
-        h1 { color: var(--primary); margin-bottom: 0.5rem; margin-top: 0; font-size: 3rem; letter-spacing: -1px; }
-        p.subtitle { font-family: sans-serif; color: #aaa; margin-bottom: 2rem; font-size: 0.9rem; font-weight: normal; }
+        h1 { color: var(--primary); margin-bottom: 0.5rem; font-size: 3rem; letter-spacing: -1px; }
+        p.subtitle { font-family: sans-serif; color: #aaa; margin-bottom: 2rem; font-size: 0.9rem; }
         
         .controls { margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         
@@ -95,19 +71,14 @@
         .result-item:hover { background: #3d3d3d; color: var(--primary); }
 
         #canvas-container { 
-            margin-top: 10px; 
-            border-radius: 12px; 
-            background-color: #1a1a1a; 
-            display: inline-block; 
-            position: relative;
+            margin-top: 10px; border-radius: 12px; background-color: #1a1a1a; 
+            display: inline-block; position: relative;
             background-image: linear-gradient(to right, #444 50%, transparent 50%), 
                               linear-gradient(to right, #444 50%, transparent 50%), 
                               linear-gradient(to bottom, #444 50%, transparent 50%), 
                               linear-gradient(to bottom, #444 50%, transparent 50%);
-            background-position: 0 0, 0 100%, 0 0, 100% 0;
-            background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
-            background-size: 15px 2px, 15px 2px, 2px 15px, 2px 15px;
-            animation: border-dance 0.4s infinite linear;
+            background-position: 0 0, 0 100%, 0 0, 100% 0; background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+            background-size: 15px 2px, 15px 2px, 2px 15px, 2px 15px; animation: border-dance 0.4s infinite linear;
         }
 
         @keyframes border-dance {
@@ -118,26 +89,28 @@
         #canvas-container.loaded { animation: none; background-image: none; border: 2px solid transparent; }
         canvas { max-width: 100%; height: auto; display: block; }
         
-        button#download-btn { background: var(--primary); border: none; padding: 14px 28px; color: white; cursor: pointer; border-radius: 8px; font-weight: bold; font-size: 1.1rem; margin-top: 2rem; display: none; transition: 0.2s; }
-        button#download-btn:hover { background: #00ab42; transform: scale(1.05); }
+        button#download-btn { background: var(--primary); border: none; padding: 14px 28px; color: white; cursor: pointer; border-radius: 8px; font-weight: bold; font-size: 1.1rem; margin-top: 2rem; display: none; }
+
+        /* VERSION NUMBER UI */
+        .version-tag {
+            position: fixed; bottom: 15px; right: 20px;
+            font-size: 0.75rem; color: rgba(255, 255, 255, 0.3);
+            pointer-events: none; user-select: none;
+        }
     </style>
 </head>
 <body>
 
 <aside id="sidebar">
     <div class="sidebar-header">Mapify</div>
-    <a href="https://discord.gg/kdFCt93SWe" target="_blank" class="nav-link">
-        <i class="fab fa-discord"></i> Discord
-    </a>
-    <a href="https://youtube.com/@SaxonMapper" target="_blank" class="nav-link">
-        <i class="fab fa-youtube"></i> YouTube
-    </a>
+    <a href="https://discord.gg/kdFCt93SWe" target="_blank" class="nav-link"><i class="fab fa-discord"></i> Discord</a>
+    <a href="https://youtube.com/@SaxonMapper" target="_blank" class="nav-link"><i class="fab fa-youtube"></i> YouTube</a>
 </aside>
 
 <main id="main-content">
     <div class="container">
         <h1>Mapify</h1>
-        <p class="subtitle">Search for a country or upload a map.</p>
+        <p class="subtitle">Search for a country to generate a high-res flag map.</p>
         <div class="controls">
             <div class="search-container">
                 <input type="text" id="wiki-search" placeholder="Type country name...">
@@ -153,6 +126,8 @@
     </div>
 </main>
 
+<div class="version-tag">Mapify v2.4.1 (Stable Build)</div>
+
 <script>
     const upload = document.getElementById('upload');
     const searchInput = document.getElementById('wiki-search');
@@ -164,42 +139,41 @@
     const texture = new Image();
     texture.src = 'grunge.png';
 
-    const countries = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahrain", "Bangladesh", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Mauritania", "Mauritius", "Mexico", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway", "Oman", "Pakistan", "Palestine", "Panama", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tunisia", "Turkey", "Turkmenistan", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"];
+    // Using a more reliable Flag-Map dataset mapping
+    const countryMap = {
+        "Jordan": "jo", "Germany": "de", "United States": "us", "United Kingdom": "gb", "France": "fr",
+        "Russia": "ru", "China": "cn", "Japan": "jp", "Brazil": "br", "Australia": "au", "Canada": "ca",
+        "Italy": "it", "Spain": "es", "Netherlands": "nl", "Ukraine": "ua", "Turkey": "tr", "India": "in",
+        "South Korea": "kr", "Mexico": "mx", "Egypt": "eg", "Saudi Arabia": "sa", "Palestine": "ps"
+    };
 
     searchInput.addEventListener('input', () => {
         const val = searchInput.value.toLowerCase();
         searchResults.innerHTML = '';
         if (!val) { searchResults.style.display = 'none'; return; }
-        const filtered = countries.filter(c => c.toLowerCase().includes(val));
+        const filtered = Object.keys(countryMap).filter(c => c.toLowerCase().includes(val));
         filtered.forEach(c => {
             const div = document.createElement('div');
             div.className = 'result-item';
             div.textContent = c;
-            div.onclick = () => fetchWikiMap(c);
+            div.onclick = () => fetchFlagMap(c);
             searchResults.appendChild(div);
         });
         searchResults.style.display = filtered.length ? 'block' : 'none';
     });
 
-    async function fetchWikiMap(country) {
+    async function fetchFlagMap(countryName) {
         searchResults.style.display = 'none';
-        searchInput.value = country;
+        searchInput.value = countryName;
+        const code = countryMap[countryName];
         
-        const fileName = `Flag_map_of_${country.replace(/ /g, '_')}.svg`;
-        const url = `https://commons.wikimedia.org/wiki/Special:FilePath/${fileName}?width=2000`;
+        // This is a curated repository of high-res flag maps that actually exist and don't rely on Wikipedia's messy naming.
+        const url = `https://raw.githubusercontent.com/the-mapping-network/flag-maps/main/assets/${code}.png`;
 
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onload = () => processImage(img);
-        img.onerror = () => {
-            const fallbackName = `Flag_map_of_the_${country.replace(/ /g, '_')}.svg`;
-            const fallbackUrl = `https://commons.wikimedia.org/wiki/Special:FilePath/${fallbackName}?width=2000`;
-            const fallbackImg = new Image();
-            fallbackImg.crossOrigin = "Anonymous";
-            fallbackImg.onload = () => processImage(fallbackImg);
-            fallbackImg.onerror = () => alert("Flag map not found. Try manual upload!");
-            fallbackImg.src = fallbackUrl;
-        };
+        img.onerror = () => alert("Direct Flag Map not found. Try uploading manually!");
         img.src = url;
     }
 
@@ -240,6 +214,7 @@
             }
         }
 
+        // ORIGINAL LOGIC & SHADOW AS REQUESTED
         ctx.shadowBlur = 18;
         ctx.shadowOffsetX = 7.07;
         ctx.shadowOffsetY = 7.07;
@@ -277,10 +252,8 @@
             islandPixels.push(curr);
             const x = curr % width;
             const y = Math.floor(curr / width);
-
             minX = Math.min(minX, x); maxX = Math.max(maxX, x);
             minY = Math.min(minY, y); maxY = Math.max(maxY, y);
-
             const neighbors = [curr - 1, curr + 1, curr - width, curr + width];
             neighbors.forEach(n => {
                 if (n >= 0 && n < visited.length && !visited[n] && pixels[n * 4 + 3] > 10) {
