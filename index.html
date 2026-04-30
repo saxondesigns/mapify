@@ -22,26 +22,41 @@
         #sidebar { width: var(--sidebar-width); background: var(--panel-dark); border-right: 1px solid #333; display: flex; flex-direction: column; padding: 30px 20px; box-sizing: border-box; }
         .sidebar-header { font-size: 1.8rem; color: var(--primary); margin-bottom: 2.5rem; letter-spacing: -1px; }
 
-        /* LIQUID WAVE BUTTONS */
+        /* FIXED LIQUID FLOW ANIMATION */
         .nav-link { 
             display: flex; align-items: center; padding: 12px 15px; color: #ccc; text-decoration: none; border-radius: 8px; 
             margin-bottom: 15px; background: #262626; font-size: 0.95rem; gap: 12px;
-            position: relative; overflow: hidden; border: 1px solid #333; z-index: 1; transition: color 0.4s;
+            position: relative; overflow: hidden; border: 1px solid #333; z-index: 1; 
+            transition: color 0.3s, border-color 0.3s;
         }
-        .nav-link::before {
-            content: ""; position: absolute; left: 50%; bottom: -150%; width: 350px; height: 350px;
-            background: rgba(255,255,255,0.1); border-radius: 43%; 
-            transform: translateX(-50%) rotate(0deg); 
-            transition: bottom 0.7s cubic-bezier(0.4, 0, 0.2, 1); z-index: -1;
-        }
-        .nav-link.discord:hover::before { bottom: -70%; background: var(--discord-blue); animation: liquid 3.5s infinite linear; }
-        .nav-link.youtube:hover::before { bottom: -70%; background: var(--youtube-red); animation: liquid 3.5s infinite linear; }
-        .nav-link:hover { color: white; border-color: rgba(255,255,255,0.2); }
 
-        @keyframes liquid {
-            0% { transform: translateX(-50%) rotate(0deg); border-radius: 43% 47% 41% 49% / 46% 42% 48% 44%; }
-            50% { transform: translateX(-50%) rotate(180deg); border-radius: 48% 42% 46% 44% / 43% 47% 41% 49%; }
-            100% { transform: translateX(-50%) rotate(360deg); border-radius: 43% 47% 41% 49% / 46% 42% 48% 44%; }
+        .nav-link::before {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: -10%;
+            width: 120%;
+            height: 150%;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: -1;
+            transform: skewY(10deg);
+        }
+
+        .nav-link.discord:hover::before {
+            top: -20%;
+            background: var(--discord-blue);
+            transform: skewY(0deg);
+        }
+
+        .nav-link.youtube:hover::before {
+            top: -20%;
+            background: var(--youtube-red);
+            transform: skewY(0deg);
+        }
+
+        .nav-link:hover {
+            color: white;
+            border-color: rgba(255,255,255,0.3);
         }
 
         #main-content { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 40px; }
@@ -66,10 +81,10 @@
         .channel-item:hover { background: #3d3d3d; }
         .channel-item img { width: 32px; height: 32px; border: 1px solid #555; border-radius: 50%; }
 
-        /* REVERTED MARCHING ANTS BORDER */
+        /* MARCHING ANTS BORDER */
         #canvas-container { 
             margin-top: 10px; border-radius: 12px; background-color: #1a1a1a; display: inline-block; 
-            position: relative; padding: 12px; transition: all 0.3s;
+            position: relative; padding: 12px;
             background-image: linear-gradient(90deg, #444 50%, transparent 50%), linear-gradient(90deg, #444 50%, transparent 50%), linear-gradient(0deg, #444 50%, transparent 50%), linear-gradient(0deg, #444 50%, transparent 50%);
             background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
             background-size: 15px 3px, 15px 3px, 3px 15px, 3px 15px;
@@ -118,7 +133,7 @@
     </div>
 </main>
 
-<div class="version-tag">Mapify v2.5.5</div>
+<div class="version-tag">Mapify v2.5.6</div>
 
 <script>
     const presetDisplay = document.getElementById('preset-display');
