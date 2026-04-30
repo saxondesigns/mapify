@@ -63,23 +63,24 @@
 
         h1 { color: var(--primary); margin-bottom: 0.5rem; font-size: 3rem; letter-spacing: -1px; }
         
-        /* SEARCH & UPLOAD */
         .controls { margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .search-container { position: relative; width: 100%; max-width: 400px; }
+        
         #preset-display { 
             display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 14px; border-radius: 8px; 
             border: 1px solid #444; background: #2d2d2d; color: white; cursor: pointer; min-height: 52px;
         }
         #preset-display img { width: 32px; height: 32px; border: 1px solid #555; display: none; border-radius: 4px; }
+
         #results-box { 
             position: absolute; top: 100%; left: 0; right: 0; background: #2d2d2d; border: 1px solid #444; 
-            border-radius: 0 0 8px 8px; max-height: 250px; overflow-y: auto; z-index: 100; display: none;
+            border-radius: 0 0 8px 8px; max-height: 300px; overflow-y: auto; z-index: 100; display: none;
         }
+        .search-header-label { padding: 8px 12px; font-size: 0.7rem; text-transform: uppercase; color: #777; background: #252525; font-weight: 700; }
         .channel-item { display: flex; align-items: center; padding: 12px; gap: 15px; border-bottom: 1px solid #333; cursor: pointer; }
         .channel-item:hover { background: #3d3d3d; }
-        .channel-item img { width: 32px; height: 32px; border: 1px solid #555; border-radius: 50%; }
+        .channel-item img { width: 32px; height: 32px; border: 1px solid #555; border-radius: 50%; object-fit: cover; }
 
-        /* CANVAS */
         #canvas-container { 
             margin-top: 10px; border-radius: 12px; background-color: #1a1a1a; display: inline-block; 
             position: relative; padding: 12px;
@@ -91,10 +92,10 @@
         }
         @keyframes border-crawl { 0% { background-position: 0 0, 0 100%, 0 0, 100% 0; } 100% { background-position: 15px 0, -15px 100%, 0 -15px, 100% 15px; } }
         #canvas-container.loaded { background-image: none; padding: 0; }
+
         canvas { max-width: 100%; height: auto; display: block; border-radius: 8px; position: relative; z-index: 2; }
         button#download-btn { background: var(--primary); border: none; padding: 14px 28px; color: white; cursor: pointer; border-radius: 8px; font-weight: bold; margin-top: 2rem; display: none; font-family: 'Poppins', sans-serif; }
 
-        /* FLAGS SECTION */
         .section-container { max-width: 900px; width: 100%; text-align: center; margin-bottom: 80px; padding-top: 20px; }
         .section-header { font-size: 2.2rem; color: white; margin-bottom: 30px; font-weight: 700; }
         .flags-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 20px; }
@@ -103,7 +104,6 @@
         .flag-card img { width: 100%; height: auto; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .flag-name { margin-top: 10px; font-size: 0.85rem; font-weight: 700; color: #ccc; }
 
-        /* TESTIMONIALS SECTION */
         .avg-rating { color: var(--gold); font-size: 1.1rem; margin-bottom: 30px; opacity: 0.9; }
         .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .testimonial-card { background: var(--panel-dark); padding: 25px 20px; border-radius: 12px; border: 1px solid #333; transition: all 0.3s ease; }
@@ -139,7 +139,7 @@
             <div class="search-container">
                 <div id="preset-display">
                     <img id="selected-logo" src="" alt="">
-                    <span id="selected-name">Select mapper preset...</span>
+                    <span id="selected-name">Select preset/flag...</span>
                 </div>
                 <div id="results-box"></div>
             </div>
@@ -156,28 +156,7 @@
     <div id="flags-anchor"></div>
     <section class="section-container">
         <h2 class="section-header">Free Flags</h2>
-        <div class="flags-grid">
-            <div class="flag-card" onclick="loadExternalFlag('https://flagcdn.com/w640/de.png')">
-                <img src="https://flagcdn.com/w320/de.png" alt="Germany">
-                <div class="flag-name">Germany</div>
-            </div>
-            <div class="flag-card" onclick="loadExternalFlag('https://flagcdn.com/w640/at.png')">
-                <img src="https://flagcdn.com/w320/at.png" alt="Austria">
-                <div class="flag-name">Austria</div>
-            </div>
-            <div class="flag-card" onclick="loadExternalFlag('https://flagcdn.com/w640/fr.png')">
-                <img src="https://flagcdn.com/w320/fr.png" alt="France">
-                <div class="flag-name">France</div>
-            </div>
-            <div class="flag-card" onclick="loadExternalFlag('https://flagcdn.com/w640/it.png')">
-                <img src="https://flagcdn.com/w320/it.png" alt="Italy">
-                <div class="flag-name">Italy</div>
-            </div>
-            <div class="flag-card" onclick="loadExternalFlag('https://flagcdn.com/w640/us.png')">
-                <img src="https://flagcdn.com/w320/us.png" alt="USA">
-                <div class="flag-name">USA</div>
-            </div>
-        </div>
+        <div class="flags-grid" id="flags-grid-inject"></div>
     </section>
 
     <!-- TRUSTED SECTION -->
@@ -187,7 +166,6 @@
         <div class="avg-rating">
             <i class="fas fa-star"></i> 5.0/5 Average Rating — "Mapping made easy, instantly."
         </div>
-        
         <div class="testimonials-grid">
             <div class="testimonial-card">
                 <div class="t-pfp-container"><img src="1.jpg" class="t-pfp"></div>
@@ -208,7 +186,7 @@
     </section>
 </div>
 
-<div class="version-tag">Mapify v2.6.0</div>
+<div class="version-tag">Mapify v2.6.1</div>
 
 <script>
     const presetDisplay = document.getElementById('preset-display');
@@ -219,9 +197,11 @@
     const ctx = canvas.getContext('2d');
     const downloadBtn = document.getElementById('download-btn');
     const canvasContainer = document.getElementById('canvas-container');
+    const flagsGrid = document.getElementById('flags-grid-inject');
 
     let activeTexture = new Image();
     let shadowSettings = { blur: 18, ox: 7.07, oy: 7.07 };
+    let currentBaseImage = null;
 
     const presets = [
         { name: "ITAE", handle: "ImThat-AustrianEmpire", texture: "grunge.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },
@@ -230,23 +210,59 @@
         { name: "ITBE", handle: "ImThat-BrazilanEmpire", texture: "grunge4.png", s: { blur: 18, ox: 7.07, oy: 7.07 } }
     ];
 
+    const countries = [
+        { name: "Germany", code: "de" }, { name: "Austria", code: "at" }, { name: "France", code: "fr" },
+        { name: "Italy", code: "it" }, { name: "USA", code: "us" }, { name: "UK", code: "gb" },
+        { name: "Jordan", code: "jo" }, { name: "Brazil", code: "br" }
+    ];
+
     presetDisplay.onclick = () => { resultsBox.style.display = resultsBox.style.display === 'block' ? 'none' : 'block'; };
 
-    presets.forEach(p => {
-        const logoUrl = `https://unavatar.io/youtube/${p.handle}`;
-        const div = document.createElement('div');
-        div.className = 'channel-item';
-        div.innerHTML = `<img src="${logoUrl}"><span>${p.name}</span>`;
-        div.onclick = () => {
-            activeTexture.src = p.texture;
-            shadowSettings = p.s;
-            selectedLogo.src = logoUrl;
-            selectedLogo.style.display = 'block';
-            selectedName.innerText = p.name;
-            resultsBox.style.display = 'none';
-        };
-        resultsBox.appendChild(div);
-    });
+    function buildSearch() {
+        resultsBox.innerHTML = '<div class="search-header-label">Mappers</div>';
+        presets.forEach(p => {
+            const logoUrl = `https://unavatar.io/youtube/${p.handle}`;
+            const div = document.createElement('div');
+            div.className = 'channel-item';
+            div.innerHTML = `<img src="${logoUrl}"><span>${p.name}</span>`;
+            div.onclick = () => selectPreset(p, logoUrl);
+            resultsBox.appendChild(div);
+        });
+
+        resultsBox.innerHTML += '<div class="search-header-label">Flags</div>';
+        countries.forEach(c => {
+            const flagUrl = `https://flagcdn.com/w160/${c.code}.png`;
+            const div = document.createElement('div');
+            div.className = 'channel-item';
+            div.innerHTML = `<img src="${flagUrl}" style="border-radius:2px"><span>${c.name}</span>`;
+            div.onclick = () => {
+                loadExternalFlag(`https://flagcdn.com/w640/${c.code}.png`);
+                selectedLogo.src = flagUrl;
+                selectedLogo.style.display = 'block';
+                selectedName.innerText = c.name;
+                resultsBox.style.display = 'none';
+            };
+            resultsBox.appendChild(div);
+
+            const card = document.createElement('div');
+            card.className = 'flag-card';
+            card.innerHTML = `<img src="${flagUrl}" alt="${c.name}"><div class="flag-name">${c.name}</div>`;
+            card.onclick = () => loadExternalFlag(`https://flagcdn.com/w640/${c.code}.png`);
+            flagsGrid.appendChild(card);
+        });
+    }
+
+    function selectPreset(p, logoUrl) {
+        activeTexture.src = p.texture;
+        shadowSettings = p.s;
+        selectedLogo.src = logoUrl;
+        selectedLogo.style.display = 'block';
+        selectedName.innerText = p.name;
+        resultsBox.style.display = 'none';
+        
+        // Live update if image is already loaded
+        if (currentBaseImage) processImage(currentBaseImage, false);
+    }
 
     function loadExternalFlag(url) {
         const img = new Image();
@@ -267,24 +283,30 @@
         reader.readAsDataURL(file);
     });
 
-    function processImage(img) {
+    function processImage(img, scroll = true) {
+        currentBaseImage = img;
         canvasContainer.classList.add('loaded');
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
         ctx.shadowBlur = shadowSettings.blur;
         ctx.shadowOffsetX = shadowSettings.ox;
         ctx.shadowOffsetY = shadowSettings.oy;
         ctx.shadowColor = "rgba(0, 0, 0, 0.70)";
         ctx.drawImage(img, 0, 0);
+        
         ctx.shadowColor = "transparent";
         ctx.save();
         ctx.globalAlpha = 0.60;
         ctx.globalCompositeOperation = 'source-atop';
-        ctx.drawImage(activeTexture, 0, 0, canvas.width, canvas.height);
+        if (activeTexture.complete && activeTexture.src) {
+            ctx.drawImage(activeTexture, 0, 0, canvas.width, canvas.height);
+        }
         ctx.restore();
+        
         downloadBtn.style.display = 'inline-block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     window.onclick = (e) => { if (!presetDisplay.contains(e.target)) resultsBox.style.display = 'none'; };
@@ -295,6 +317,9 @@
         link.href = canvas.toDataURL("image/png");
         link.click();
     };
+
+    buildSearch();
+    activeTexture.onload = () => { if(currentBaseImage) processImage(currentBaseImage, false); };
 </script>
 </body>
 </html>
