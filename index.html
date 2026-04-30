@@ -13,6 +13,8 @@
             --bg-dark: #121212;
             --panel-dark: #1e1e1e;
             --sidebar-width: 240px;
+            --discord-blue: #5865F2;
+            --youtube-red: #FF0000;
         }
 
         body { font-family: 'Poppins', sans-serif; background: var(--bg-dark); color: #e0e0e0; margin: 0; display: flex; min-height: 100vh; }
@@ -20,8 +22,45 @@
         #sidebar { width: var(--sidebar-width); background: var(--panel-dark); border-right: 1px solid #333; display: flex; flex-direction: column; padding: 30px 20px; box-sizing: border-box; }
         .sidebar-header { font-size: 1.8rem; color: var(--primary); margin-bottom: 2.5rem; letter-spacing: -1px; }
 
-        .nav-link { display: flex; align-items: center; padding: 12px 15px; color: #ccc; text-decoration: none; border-radius: 8px; transition: 0.2s; margin-bottom: 15px; background: #262626; font-size: 0.95rem; gap: 12px; }
-        .nav-link:hover { background: #333; color: var(--primary); transform: translateX(5px); }
+        /* BASE NAV LINK STYLE */
+        .nav-link { 
+            display: flex; 
+            align-items: center; 
+            padding: 12px 15px; 
+            color: #ccc; 
+            text-decoration: none; 
+            border-radius: 8px; 
+            transition: all 0.3s ease; 
+            margin-bottom: 15px; 
+            background: #262626; 
+            font-size: 0.95rem; 
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid transparent;
+        }
+
+        /* DISCORD HOVER - BLUE FLOW */
+        .nav-link.discord:hover { 
+            background: #2d2d2d;
+            color: white;
+            border-color: var(--discord-blue);
+            box-shadow: 0 0 20px rgba(88, 101, 242, 0.4);
+            transform: translateY(-2px);
+        }
+        .nav-link.discord i { transition: color 0.3s; }
+        .nav-link.discord:hover i { color: var(--discord-blue); }
+
+        /* YOUTUBE HOVER - RED FLOW */
+        .nav-link.youtube:hover { 
+            background: #2d2d2d;
+            color: white;
+            border-color: var(--youtube-red);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+            transform: translateY(-2px);
+        }
+        .nav-link.youtube i { transition: color 0.3s; }
+        .nav-link.youtube:hover i { color: var(--youtube-red); }
 
         #main-content { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 40px; }
         .container { background: var(--panel-dark); padding: 2.5rem; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); max-width: 800px; width: 100%; text-align: center; border: 1px solid #333; }
@@ -32,7 +71,6 @@
         
         .search-container { position: relative; width: 100%; max-width: 400px; }
         
-        /* New Box Style to show Logo + Name */
         #preset-display { 
             display: flex; align-items: center; gap: 12px;
             width: 100%; padding: 10px 14px; border-radius: 8px; 
@@ -69,8 +107,8 @@
 
 <aside id="sidebar">
     <div class="sidebar-header">Mapify</div>
-    <a href="https://discord.gg/kdFCt93SWe" target="_blank" class="nav-link"><i class="fab fa-discord"></i> Discord</a>
-    <a href="https://youtube.com/@SaxonMapper" target="_blank" class="nav-link"><i class="fab fa-youtube"></i> YouTube</a>
+    <a href="https://discord.gg/kdFCt93SWe" target="_blank" class="nav-link discord"><i class="fab fa-discord"></i> Discord</a>
+    <a href="https://youtube.com/@SaxonMapper" target="_blank" class="nav-link youtube"><i class="fab fa-youtube"></i> YouTube</a>
 </aside>
 
 <main id="main-content">
@@ -94,7 +132,7 @@
     </div>
 </main>
 
-<div class="version-tag">Mapify v2.4.9</div>
+<div class="version-tag">Mapify v2.5.0</div>
 
 <script>
     const presetDisplay = document.getElementById('preset-display');
@@ -128,12 +166,9 @@
             activeTexture = new Image();
             activeTexture.src = p.texture;
             shadowSettings = p.s;
-            
-            // Update UI with Logo + Name
             selectedLogo.src = logoUrl;
             selectedLogo.style.display = 'block';
             selectedName.innerText = p.name;
-            
             resultsBox.style.display = 'none';
         };
         resultsBox.appendChild(div);
