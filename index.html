@@ -147,7 +147,7 @@
 <main id="main-content">
     <div class="container">
         <h1>Mapify</h1>
-        <p class="subtitle">Search Wikipedia or upload a map.</p>
+        <p class="subtitle">The ultimate geocontent tool.</p>
         <div class="controls">
             <div class="search-container">
                 <input type="text" id="wiki-search" placeholder="Search country flag map...">
@@ -198,14 +198,19 @@
     async function fetchWikiMap(country) {
         searchResults.style.display = 'none';
         searchInput.value = country;
-        const formattedName = country.replace(/ /g, '_');
         
-        const possibleExtensions = ['svg', 'png', 'jpg'];
+        const formattedName = country.replace(/ /g, '_');
+        const searchQueries = [
+            `File:Flag_map_of_${formattedName}.svg`,
+            `File:Flag_map_of_${formattedName}.png`,
+            `File:Flag_map_of_the_${formattedName}.svg`,
+            `File:Flag_map_of_the_${formattedName}.png`
+        ];
+
         let imgUrl = null;
 
-        for (const ext of possibleExtensions) {
-            const fileName = `File:Flag_map_of_${formattedName}.${ext}`;
-            const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${fileName}&prop=imageinfo&iiprop=url|thumburl&iiurlwidth=2000&format=json&origin=*`;
+        for (const query of searchQueries) {
+            const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${query}&prop=imageinfo&iiprop=url|thumburl&iiurlwidth=2000&format=json&origin=*`;
             
             try {
                 const response = await fetch(url);
@@ -223,7 +228,7 @@
         if (imgUrl) {
             loadExternalImage(imgUrl);
         } else {
-            alert("Flag map not found on Wikipedia. Try manual upload!");
+            alert("Wikipedia naming is a bit dodgy for this one. Try a manual upload!");
         }
     }
 
