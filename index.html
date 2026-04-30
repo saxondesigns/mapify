@@ -19,6 +19,11 @@
             --gold: #ffcc00;
         }
 
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         html { scroll-behavior: smooth; }
 
         body { 
@@ -44,32 +49,25 @@
             position: fixed; 
             height: 100vh; 
             z-index: 1000;
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         #sidebar:hover { width: 220px; }
         
-        .sidebar-header { 
-            font-size: 1.2rem; 
-            color: var(--primary); 
-            margin-bottom: 3rem; 
-            font-weight: 700;
-        }
+        .sidebar-header { font-size: 1.2rem; color: var(--primary); margin-bottom: 3rem; font-weight: 700; }
 
         .nav-link { 
             display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; 
             color: var(--apple-text); text-decoration: none; border-radius: 12px; 
             margin-bottom: 15px; background: transparent; font-size: 1.2rem; gap: 15px;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             overflow: hidden;
         }
         
         .nav-link span { display: none; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
-        
         #sidebar:hover .nav-link { width: 180px; justify-content: flex-start; padding-left: 20px; }
         #sidebar:hover .nav-link span { display: block; }
-        
-        .nav-link:hover { background: rgba(255, 255, 255, 0.1); transform: scale(1.05); }
+        .nav-link:hover { background: rgba(255, 255, 255, 0.1); transform: scale(1.05); color: var(--primary); }
 
         #main-wrapper { 
             margin-left: 80px; 
@@ -92,18 +90,44 @@
             text-align: center; 
             border: 1px solid var(--apple-border);
             margin-bottom: 80px; 
+            animation: fadeInUp 0.8s ease-out;
         }
 
         h1 { color: var(--apple-text); margin-bottom: 0.5rem; font-size: 3.5rem; letter-spacing: -1.5px; font-weight: 700; }
         
+        /* Wave Button Effect */
+        .wave-btn {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .wave-btn::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .wave-btn:active::after {
+            width: 300%;
+            height: 300%;
+        }
+
         .controls { margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center; gap: 20px; }
         
         #preset-display { 
             display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 16px; border-radius: 14px; 
             border: 1px solid var(--apple-border); background: #2c2c2e; color: var(--apple-text); cursor: pointer; 
-            min-height: 52px; font-weight: 500; transition: border-color 0.2s;
+            min-height: 52px; font-weight: 500; transition: all 0.3s;
         }
-        #preset-display:hover { border-color: var(--primary); }
+        #preset-display:hover { border-color: var(--primary); background: #3a3a3c; }
 
         #results-box { 
             position: absolute; top: 100%; left: 0; right: 0; background: #2c2c2e; border: 1px solid var(--apple-border); 
@@ -116,17 +140,20 @@
         #canvas-container { 
             margin-top: 20px; border-radius: 20px; background: #1c1c1e; padding: 10px;
             box-shadow: inset 0 0 0 1px var(--apple-border);
+            transition: transform 0.3s ease;
         }
+        #canvas-container:hover { transform: scale(1.01); }
+
         canvas { border-radius: 14px; max-width: 100%; height: auto; display: block; }
         
         button#download-btn { 
             background: var(--primary); border: none; padding: 16px 32px; color: white; 
             cursor: pointer; border-radius: 30px; font-weight: 600; margin-top: 2rem; 
-            display: none; transition: transform 0.2s;
+            display: none; 
         }
 
-        /* FLAGS SECTION */
-        .section-container { max-width: 1100px; width: 100%; text-align: center; margin-bottom: 100px; }
+        /* Section Styling */
+        .section-container { max-width: 1100px; width: 100%; text-align: center; margin-bottom: 100px; animation: fadeInUp 1s ease-out; }
         .section-header { font-size: 2.5rem; color: var(--apple-text); margin-bottom: 15px; font-weight: 700; }
         
         .flag-search-bar {
@@ -135,20 +162,23 @@
             color: var(--apple-text); font-family: inherit; outline: none;
             transition: all 0.3s; font-size: 1.1rem;
         }
-        .flag-search-bar:focus { border-color: var(--primary); }
+        .flag-search-bar:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 202, 78, 0.2); }
 
         /* REVIEWS GRID */
         .avg-rating { color: var(--apple-secondary); font-size: 1.1rem; margin-bottom: 40px; }
         .testimonials-grid { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; }
         .testimonial-card { 
             background: #1c1c1e; padding: 30px; border-radius: 24px; 
-            border: 1px solid var(--apple-border); transition: all 0.3s ease;
+            border: 1px solid var(--apple-border); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             flex: 1 1 calc(33.333% - 24px); min-width: 280px; max-width: calc(33.333% - 24px);
+            text-align: left;
         }
-        .testimonial-card:hover { transform: translateY(-8px); border-color: var(--primary); }
+        .testimonial-card:hover { transform: translateY(-12px); border-color: var(--primary); box-shadow: 0 15px 30px rgba(0,0,0,0.4); }
         .t-pfp-container { width: 56px; height: 56px; margin-bottom: 15px; border-radius: 50%; overflow: hidden; background: #2c2c2e; }
-        .t-stars { color: var(--gold); font-size: 0.8rem; margin-bottom: 12px; }
-        .t-text { font-size: 1rem; color: var(--apple-text); line-height: 1.5; margin: 0; font-weight: 500; }
+        .t-name { font-weight: 700; font-size: 0.95rem; color: var(--apple-text); margin-bottom: 4px; display: block; }
+        .t-stars { color: var(--gold); font-size: 0.75rem; margin-bottom: 12px; }
+        .sub-count { font-size: 0.75rem; color: var(--primary); margin-top: -10px; margin-bottom: 10px; font-weight: 600; }
+        .t-text { font-size: 0.95rem; color: var(--apple-secondary); line-height: 1.5; margin: 0; font-weight: 400; font-style: italic; }
 
         .version-tag { position: fixed; bottom: 20px; right: 30px; font-size: 0.8rem; color: var(--apple-secondary); opacity: 0.5; }
 
@@ -173,75 +203,93 @@
 <div id="main-wrapper">
     <div class="container">
         <h1>Mapify</h1>
-        <p style="color: var(--apple-secondary); font-weight: 500; margin-bottom: 2rem;">Create stunning flag maps instantly.</p>
+        <p style="color: var(--apple-secondary); font-weight: 500; margin-bottom: 2rem;">Professional flag maps in seconds.</p>
         <div class="controls">
             <div class="search-container" style="position: relative; width: 100%; max-width: 400px;">
-                <div id="preset-display">
+                <div id="preset-display" class="wave-btn">
                     <img id="selected-logo" src="" alt="" style="width:24px; height:24px; border-radius:50%; display:none;">
-                    <span id="selected-name">Select Preset</span>
+                    <span id="selected-name">Select Texture Preset</span>
                 </div>
                 <div id="results-box"></div>
             </div>
             <input type="file" id="upload" accept="image/*" style="display: none;">
-            <label for="upload" style="cursor: pointer; color: var(--primary); font-weight: 600;">Or upload your own image</label>
+            <label for="upload" style="cursor: pointer; color: var(--primary); font-weight: 600;" class="wave-btn">Or upload base image</label>
         </div>
         <div id="canvas-container">
             <canvas id="mainCanvas"></canvas>
         </div>
-        <button id="download-btn">Save to Photos</button>
+        <button id="download-btn" class="wave-btn">Save to Device</button>
     </div>
 
-    <!-- FLAGS -->
+    <!-- FLAGS SECTION -->
     <div id="flags-anchor"></div>
     <section class="section-container">
-        <h2 class="section-header">Browse Flags</h2>
+        <h2 class="section-header">Global Assets</h2>
         <div class="flag-search-container" style="position: relative; max-width: 500px; margin: 0 auto;">
-            <input type="text" id="flag-search" class="flag-search-bar" placeholder="Search countries...">
+            <input type="text" id="flag-search" class="flag-search-bar" placeholder="Find a flag...">
             <div id="flag-results" style="position: absolute; width: 100%; background: #2c2c2e; border-radius: 14px; top: 110%; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: none;"></div>
         </div>
     </section>
 
-    <!-- REVIEWS -->
+    <!-- REVIEWS SECTION -->
     <div id="reviews-anchor"></div>
     <section class="section-container">
-        <h2 class="section-header">Trusted by Creators</h2>
-        <div class="avg-rating">Loved by the mapping community.</div>
+        <h2 class="section-header">Community Verified</h2>
+        <div class="avg-rating">Used by top geopolitical creators.</div>
         <div class="testimonials-grid">
+            <!-- ITAE -->
             <div class="testimonial-card">
                 <div class="t-pfp-container"><img src="https://unavatar.io/youtube/ImThat-AustrianEmpire" style="width:100%"></div>
+                <span class="t-name">@ITAE</span>
                 <div class="t-stars">★★★★★</div>
+                <div class="sub-count">152K Subscribers</div>
                 <p class="t-text">"Very Useful"</p>
             </div>
+            <!-- Empire Editz -->
             <div class="testimonial-card">
                 <div class="t-pfp-container"><img src="https://unavatar.io/youtube/UC4RgBJffMZ1mlPuLQ_R_B4g" style="width:100%"></div>
+                <span class="t-name">@Empire Editz</span>
                 <div class="t-stars">★★★★★</div>
+                <div class="sub-count">10K Subscribers</div>
                 <p class="t-text">"It is actually so helpful for beginners."</p>
             </div>
+            <!-- Geographic Edits -->
             <div class="testimonial-card">
                 <div class="t-pfp-container"><img src="https://unavatar.io/youtube/UCc2olH4OKeHMNllPIJHWcSQ" style="width:100%"></div>
+                <span class="t-name">@Geographic Edits</span>
                 <div class="t-stars">★★★★★</div>
+                <div class="sub-count">7.57K Subscribers</div>
                 <p class="t-text">"This will definitely save me a lot of time from now on!"</p>
             </div>
+            <!-- Austro-Canadian_Editz -->
             <div class="testimonial-card">
-                <div class="t-pfp-container"><img src="2.jpg" style="width:100%"></div>
+                <div class="t-pfp-container"><img src="https://unavatar.io/youtube/UCMcxM4qYmXflUbggRejHPFQ" style="width:100%"></div>
+                <span class="t-name">@Austro-Canadian_Editz</span>
                 <div class="t-stars">★★★★★</div>
+                <div class="sub-count">24.8K Subscribers</div>
                 <p class="t-text">"A hidden gem for quick flag maps."</p>
             </div>
+            <!-- GeoEra -->
             <div class="testimonial-card">
-                <div class="t-pfp-container"><img src="1.jpg" style="width:100%"></div>
+                <div class="t-pfp-container"><img src="https://unavatar.io/youtube/GeoEraYT" style="width:100%"></div>
+                <span class="t-name">@GeoEra</span>
                 <div class="t-stars">★★★★★</div>
+                <div class="sub-count">882 Subscribers</div>
                 <p class="t-text">"Happened instantly!"</p>
             </div>
+            <!-- Saxon Mapper -->
             <div class="testimonial-card">
-                <div class="t-pfp-container"><img src="3.jpg" style="width:100%"></div>
+                <div class="t-pfp-container"><img src="https://unavatar.io/youtube/SaxonMapper" style="width:100%"></div>
+                <span class="t-name">@Saxon Mapper</span>
                 <div class="t-stars">★★★★★</div>
+                <div class="sub-count">1.76K Subscribers</div>
                 <p class="t-text">"Cool site lol!"</p>
             </div>
         </div>
     </section>
 </div>
 
-<div class="version-tag">Mapify v2.7.1</div>
+<div class="version-tag">Mapify v2.7.5</div>
 
 <script>
     const presetDisplay = document.getElementById('preset-display');
@@ -310,6 +358,7 @@
                 img.onload = () => processImage(img);
                 img.src = `https://flagcdn.com/w640/${c.code}.png`;
                 flagResults.style.display = 'none';
+                flagSearchInput.value = c.name;
             };
             flagResults.appendChild(div);
         });
