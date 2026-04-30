@@ -94,7 +94,7 @@
         canvas { max-width: 100%; height: auto; display: block; border-radius: 8px; position: relative; z-index: 2; }
         button#download-btn { background: var(--primary); border: none; padding: 14px 28px; color: white; cursor: pointer; border-radius: 8px; font-weight: bold; margin-top: 2rem; display: none; font-family: 'Poppins', sans-serif; }
 
-        /* FLAGS SECTION */
+        /* FLAGS SECTION - NO PREVIEWS */
         .section-container { max-width: 900px; width: 100%; text-align: center; margin-bottom: 80px; padding-top: 20px; }
         .section-header { font-size: 2.2rem; color: white; margin-bottom: 10px; font-weight: 700; }
         
@@ -166,7 +166,7 @@
     <section class="section-container">
         <h2 class="section-header">Global Flags</h2>
         <div class="flag-search-container">
-            <input type="text" id="flag-search" class="flag-search-bar" placeholder="Search for any flag...">
+            <input type="text" id="flag-search" class="flag-search-bar" placeholder="Search for any flag in the world...">
             <div id="flag-results"></div>
         </div>
     </section>
@@ -187,7 +187,7 @@
             <div class="testimonial-card">
                 <div class="t-pfp-container"><img src="2.jpg" class="t-pfp"></div>
                 <div class="t-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                <p class="t-text">"YOOOO"</p>
+                <p class="t-text">"this is a hidden gem and how to make quick and easy flag maps for edits"</p>
             </div>
             <div class="testimonial-card">
                 <div class="t-pfp-container"><img src="3.jpg" class="t-pfp"></div>
@@ -198,7 +198,7 @@
     </section>
 </div>
 
-<div class="version-tag">Mapify v2.6.4</div>
+<div class="version-tag">Mapify v2.6.5</div>
 
 <script>
     const presetDisplay = document.getElementById('preset-display');
@@ -254,7 +254,7 @@
         list.forEach(c => {
             const div = document.createElement('div');
             div.className = 'channel-item';
-            div.innerHTML = `<img src="https://flagcdn.com/w80/${c.code}.png" style="border-radius:2px"><span>${c.name}</span>`;
+            div.innerHTML = `<img src="https://flagcdn.com/w80/${c.code}.png" style="border-radius:2px; width:32px; height:20px; object-fit:cover;"><span>${c.name}</span>`;
             div.onclick = () => {
                 loadExternalFlag(`https://flagcdn.com/w640/${c.code}.png`);
                 flagResults.style.display = 'none';
