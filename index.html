@@ -31,8 +31,18 @@
         .controls { margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         
         .search-container { position: relative; width: 100%; max-width: 400px; }
-        #preset-search { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid #444; background: #2d2d2d; color: white; box-sizing: border-box; cursor: pointer; text-align: left; }
         
+        /* New Box Style to show Logo + Name */
+        #preset-display { 
+            display: flex; align-items: center; gap: 12px;
+            width: 100%; padding: 10px 14px; border-radius: 8px; 
+            border: 1px solid #444; background: #2d2d2d; color: white; 
+            box-sizing: border-box; cursor: pointer; text-align: left;
+            min-height: 52px;
+        }
+        #preset-display img { width: 32px; height: 32px; border: 1px solid #555; display: none; }
+        #preset-display span { font-weight: bold; }
+
         #results-box { 
             position: absolute; top: 100%; left: 0; right: 0; 
             background: #2d2d2d; border: 1px solid #444; border-radius: 0 0 8px 8px; 
@@ -68,10 +78,13 @@
         <h1>Mapify</h1>
         <div class="controls">
             <div class="search-container">
-                <input type="text" id="preset-search" placeholder="Select mapper preset..." readonly>
+                <div id="preset-display">
+                    <img id="selected-logo" src="" alt="">
+                    <span id="selected-name">Select mapper preset...</span>
+                </div>
                 <div id="results-box"></div>
             </div>
-            <p style="font-size: 0.8rem; color: #666; margin: 0;">— OR —</p>
+            <p style="font-size: 0.8rem; color: #666; margin: 5px 0;">— UPLOAD TEMPLATE —</p>
             <input type="file" id="upload" accept="image/*" style="background: #2d2d2d; padding: 12px; border-radius: 8px; border: 1px solid #444; color: white; cursor: pointer; width: 100%; max-width: 300px;">
         </div>
         <div id="canvas-container">
@@ -81,10 +94,12 @@
     </div>
 </main>
 
-<div class="version-tag">Mapify v2.4.7</div>
+<div class="version-tag">Mapify v2.4.9</div>
 
 <script>
-    const searchInput = document.getElementById('preset-search');
+    const presetDisplay = document.getElementById('preset-display');
+    const selectedLogo = document.getElementById('selected-logo');
+    const selectedName = document.getElementById('selected-name');
     const resultsBox = document.getElementById('results-box');
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
@@ -95,38 +110,34 @@
     let shadowSettings = { blur: 18, ox: 7.07, oy: 7.07 };
 
     const presets = [
-        { name: "ITAE", handle: "ImThat-AustrianEmpire", wiki: "Austria-Hungary", texture: "grunge.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },
-        { name: "Willdude", handle: "WILLDUDE1", wiki: "United_States", texture: "grunge2.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },
-        { name: "Geographier", handle: "Geographier", wiki: "Germany", texture: "grunge3.png", s: { blur: 18, ox: 5.66, oy: 5.66 } }
+        { name: "ITAE", handle: "ImThat-AustrianEmpire", texture: "grunge.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },
+        { name: "Willdude", handle: "WILLDUDE1", texture: "grunge2.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },
+        { name: "Geographier", handle: "Geographier", texture: "grunge3.png", s: { blur: 18, ox: 5.66, oy: 5.66 } }
     ];
 
-    searchInput.onclick = () => {
+    presetDisplay.onclick = () => {
         resultsBox.style.display = resultsBox.style.display === 'block' ? 'none' : 'block';
     };
 
     presets.forEach(p => {
+        const logoUrl = `https://unavatar.io/youtube/${p.handle}`;
         const div = document.createElement('div');
         div.className = 'channel-item';
-        div.innerHTML = `<img src="https://unavatar.io/youtube/${p.handle}" alt="logo"><span>${p.name}</span>`;
+        div.innerHTML = `<img src="${logoUrl}" alt="logo"><span>${p.name}</span>`;
         div.onclick = () => {
             activeTexture = new Image();
             activeTexture.src = p.texture;
             shadowSettings = p.s;
-            fetchWikiMap(p.wiki);
-            searchInput.value = p.name;
+            
+            // Update UI with Logo + Name
+            selectedLogo.src = logoUrl;
+            selectedLogo.style.display = 'block';
+            selectedName.innerText = p.name;
+            
             resultsBox.style.display = 'none';
         };
         resultsBox.appendChild(div);
     });
-
-    async function fetchWikiMap(country) {
-        const url = `https://commons.wikimedia.org/wiki/Special:FilePath/Flag_map_of_${country}.svg?width=2000`;
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.onload = () => processImage(img);
-        img.onerror = () => alert("Template missing on Wikipedia.");
-        img.src = url;
-    }
 
     document.getElementById('upload').addEventListener('change', (e) => {
         const file = e.target.files[0];
@@ -162,11 +173,12 @@
         downloadBtn.style.display = 'inline-block';
     }
 
-    window.onclick = (e) => { if (e.target !== searchInput) resultsBox.style.display = 'none'; };
+    window.onclick = (e) => { if (!presetDisplay.contains(e.target)) resultsBox.style.display = 'none'; };
 
     downloadBtn.onclick = () => {
         const link = document.createElement('a');
-        link.download = `mapify_${searchInput.value.toLowerCase() || 'export'}.png`;
+        const fileName = selectedName.innerText === "Select mapper preset..." ? "export" : selectedName.innerText.toLowerCase();
+        link.download = `mapify_${fileName}.png`;
         link.href = canvas.toDataURL("image/png");
         link.click();
     };
