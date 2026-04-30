@@ -9,10 +9,10 @@
         body { font-family: 'Poppins', 'Arial Bold', sans-serif; background: #121212; color: #e0e0e0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
         .container { background: #1e1e1e; padding: 2.5rem; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); max-width: 800px; width: 100%; text-align: center; border: 1px solid #333; }
         h1 { color: #00ca4e; margin-bottom: 0.5rem; margin-top: 0; font-size: 3rem; letter-spacing: -1px; }
-        p.subtitle { font-family: sans-serif; color: #aaa; margin-bottom: 2rem; font-size: 0.9rem; font-weight: normal; }
-        .controls { margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        p.subtitle { font-family: sans-serif; color: #aaa; margin-bottom: 2rem; font-size: 1.1rem; font-weight: normal; font-style: italic; }
+        .controls { margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         input[type="file"] { background: #2d2d2d; padding: 12px; border-radius: 8px; border: 1px solid #444; color: white; cursor: pointer; width: 100%; max-width: 300px; font-family: sans-serif; }
-        #canvas-container { margin-top: 10px; border: 2px dashed #444; border-radius: 12px; background-color: #1a1a1a; background-size: 20px 20px; display: inline-block; }
+        #canvas-container { margin-top: 10px; border: 2px dashed #444; border-radius: 12px; background-color: #1a1a1a; display: inline-block; }
         canvas { max-width: 100%; height: auto; display: block; }
         button#download-btn { background: #00ca4e; border: none; padding: 14px 28px; color: white; cursor: pointer; border-radius: 8px; font-family: 'Poppins', sans-serif; font-weight: bold; font-size: 1.1rem; margin-top: 2rem; display: none; transition: 0.2s; }
         button#download-btn:hover { background: #00ab42; transform: scale(1.05); }
@@ -22,7 +22,7 @@
 
 <div class="container">
     <h1>Mapify</h1>
-    <p class="subtitle">Smart island-aware map grungifier.</p>
+    <p class="subtitle">The ultimate Geotube Creation tool?</p>
     <div class="controls">
         <input type="file" id="upload" accept="image/*">
     </div>
@@ -40,8 +40,8 @@
     const texture = new Image();
     texture.src = 'grunge.png';
 
-    upload.addEventListener('change', (e) => {
-        const file = e.target.files[0];
+    upload.addEventListener('change', () => {
+        const file = upload.files[0];
         if (!file) return;
         const reader = new FileReader();
         reader.onload = (event) => {
@@ -49,7 +49,6 @@
             img.onload = () => {
                 canvas.width = img.width;
                 canvas.height = img.height;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
                 const tempCanvas = document.createElement('canvas');
                 const tCtx = tempCanvas.getContext('2d');
@@ -66,7 +65,7 @@
                     const idx = i / 4;
                     if (pixels[i + 3] > 10 && !visited[idx]) {
                         const island = findIsland(idx, pixels, visited, canvas.width, canvas.height);
-                        if (island.pixels.length > 50) islands.push(island);
+                        if (island.pixels.length > 20) islands.push(island);
                     }
                 }
 
@@ -88,10 +87,11 @@
                     ctx.clip(path);
                     ctx.globalAlpha = 0.60;
                     ctx.globalCompositeOperation = 'source-atop';
-                    ctx.drawImage(texture, island.minX, island.minY, island.maxX - island.minX, island.maxY - island.minY);
+                    let w = island.maxX - island.minX;
+                    let h = island.maxY - island.minY;
+                    ctx.drawImage(texture, island.minX, island.minY, w, h);
                     ctx.restore();
                 });
-
                 downloadBtn.style.display = 'inline-block';
             };
             img.src = event.target.result;
@@ -102,27 +102,18 @@
     function findIsland(startIdx, pixels, visited, width, height) {
         const stack = [startIdx];
         const islandPixels = [];
-        let minX = startIdx % width, maxX = minX;
-        let minY = Math.floor(startIdx / width), maxY = minY;
+        let minX = startIdx % width, maxX = minX, minY = Math.floor(startIdx / width), maxY = minY;
         visited[startIdx] = 1;
-
         while (stack.length > 0) {
             const curr = stack.pop();
             islandPixels.push(curr);
-            const x = curr % width;
-            const y = Math.floor(curr / width);
-
+            const x = curr % width, y = Math.floor(curr / width);
             minX = Math.min(minX, x); maxX = Math.max(maxX, x);
             minY = Math.min(minY, y); maxY = Math.max(maxY, y);
-
             const neighbors = [curr - 1, curr + 1, curr - width, curr + width];
             neighbors.forEach(n => {
                 if (n >= 0 && n < visited.length && !visited[n] && pixels[n * 4 + 3] > 10) {
-                    const nx = n % width;
-                    if (Math.abs(nx - x) <= 1) {
-                        visited[n] = 1;
-                        stack.push(n);
-                    }
+                    if (Math.abs((n % width) - x) <= 1) { visited[n] = 1; stack.push(n); }
                 }
             });
         }
@@ -131,7 +122,7 @@
 
     downloadBtn.addEventListener('click', () => {
         const link = document.createElement('a');
-        link.download = 'mapify_islands.png';
+        link.download = `mapify_export.png`;
         link.href = canvas.toDataURL("image/png");
         link.click();
     });
