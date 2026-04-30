@@ -22,7 +22,6 @@
         #sidebar { width: var(--sidebar-width); background: var(--panel-dark); border-right: 1px solid #333; display: flex; flex-direction: column; padding: 30px 20px; box-sizing: border-box; }
         .sidebar-header { font-size: 1.8rem; color: var(--primary); margin-bottom: 2.5rem; letter-spacing: -1px; }
 
-        /* BASE NAV LINK STYLE */
         .nav-link { 
             display: flex; 
             align-items: center; 
@@ -40,7 +39,6 @@
             border: 1px solid transparent;
         }
 
-        /* DISCORD HOVER - BLUE FLOW */
         .nav-link.discord:hover { 
             background: #2d2d2d;
             color: white;
@@ -48,10 +46,8 @@
             box-shadow: 0 0 20px rgba(88, 101, 242, 0.4);
             transform: translateY(-2px);
         }
-        .nav-link.discord i { transition: color 0.3s; }
         .nav-link.discord:hover i { color: var(--discord-blue); }
 
-        /* YOUTUBE HOVER - RED FLOW */
         .nav-link.youtube:hover { 
             background: #2d2d2d;
             color: white;
@@ -59,7 +55,6 @@
             box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
             transform: translateY(-2px);
         }
-        .nav-link.youtube i { transition: color 0.3s; }
         .nav-link.youtube:hover i { color: var(--youtube-red); }
 
         #main-content { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 40px; }
@@ -132,7 +127,7 @@
     </div>
 </main>
 
-<div class="version-tag">Mapify v2.5.0</div>
+<div class="version-tag">Mapify v2.5.1</div>
 
 <script>
     const presetDisplay = document.getElementById('preset-display');
@@ -150,7 +145,7 @@
     const presets = [
         { name: "ITAE", handle: "ImThat-AustrianEmpire", texture: "grunge.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },
         { name: "Willdude", handle: "WILLDUDE1", texture: "grunge2.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },
-        { name: "Geographier", handle: "Geographier", texture: "grunge3.png", s: { blur: 18, ox: 5.66, oy: 5.66 } }
+        { name: "KT", handle: "knowledgetech_21", texture: "grunge3.png", s: { blur: 18, ox: 5.66, oy: 5.66 } }
     ];
 
     presetDisplay.onclick = () => {
