@@ -15,78 +15,44 @@
             --sidebar-width: 240px;
         }
 
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            background: var(--bg-dark); 
-            color: #e0e0e0; 
-            margin: 0; 
-            display: flex;
-            min-height: 100vh;
-        }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg-dark); color: #e0e0e0; margin: 0; display: flex; min-height: 100vh; }
 
-        #sidebar {
-            width: var(--sidebar-width);
-            background: var(--panel-dark);
-            border-right: 1px solid #333;
-            display: flex;
-            flex-direction: column;
-            padding: 30px 20px;
-            box-sizing: border-box;
-        }
-
+        #sidebar { width: var(--sidebar-width); background: var(--panel-dark); border-right: 1px solid #333; display: flex; flex-direction: column; padding: 30px 20px; box-sizing: border-box; }
         .sidebar-header { font-size: 1.8rem; color: var(--primary); margin-bottom: 2.5rem; letter-spacing: -1px; }
 
-        .nav-link {
-            display: flex; align-items: center; padding: 12px 15px; color: #ccc;
-            text-decoration: none; border-radius: 8px; transition: 0.2s;
-            margin-bottom: 15px; background: #262626; font-size: 0.95rem; gap: 12px;
-        }
-
+        .nav-link { display: flex; align-items: center; padding: 12px 15px; color: #ccc; text-decoration: none; border-radius: 8px; transition: 0.2s; margin-bottom: 15px; background: #262626; font-size: 0.95rem; gap: 12px; }
         .nav-link:hover { background: #333; color: var(--primary); transform: translateX(5px); }
-        .fa-youtube { color: #ff0000; }
-        .fa-discord { color: #5865F2; }
 
         #main-content { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 40px; }
-
-        .container { 
-            background: var(--panel-dark); padding: 2.5rem; border-radius: 16px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6); max-width: 800px; width: 100%; 
-            text-align: center; border: 1px solid #333; 
-        }
+        .container { background: var(--panel-dark); padding: 2.5rem; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); max-width: 800px; width: 100%; text-align: center; border: 1px solid #333; }
 
         h1 { color: var(--primary); margin-bottom: 0.5rem; font-size: 3rem; letter-spacing: -1px; }
-        p.subtitle { font-family: sans-serif; color: #aaa; margin-bottom: 2rem; font-size: 0.9rem; }
         
         .controls { margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         
-        #wiki-search { width: 100%; max-width: 300px; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #2d2d2d; color: white; }
+        .search-container { position: relative; width: 100%; max-width: 400px; }
+        #preset-search { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid #444; background: #2d2d2d; color: white; box-sizing: border-box; cursor: pointer; text-align: left; }
         
-        #canvas-container { 
-            margin-top: 10px; border-radius: 12px; background-color: #1a1a1a; 
-            display: inline-block; position: relative;
-            background-image: linear-gradient(to right, #444 50%, transparent 50%), 
-                              linear-gradient(to right, #444 50%, transparent 50%), 
-                              linear-gradient(to bottom, #444 50%, transparent 50%), 
-                              linear-gradient(to bottom, #444 50%, transparent 50%);
-            background-position: 0 0, 0 100%, 0 0, 100% 0; background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
-            background-size: 15px 2px, 15px 2px, 2px 15px, 2px 15px; animation: border-dance 0.4s infinite linear;
+        #results-box { 
+            position: absolute; top: 100%; left: 0; right: 0; 
+            background: #2d2d2d; border: 1px solid #444; border-radius: 0 0 8px 8px; 
+            max-height: 250px; overflow-y: auto; z-index: 100; display: none;
         }
 
-        @keyframes border-dance {
-            0% { background-position: 0 0, 15px 100%, 0 15px, 100% 0; }
-            100% { background-position: 15px 0, 0 100%, 0 0, 100% 15px; }
+        .channel-item { 
+            display: flex; align-items: center; padding: 12px; gap: 15px; 
+            border-bottom: 1px solid #333; cursor: pointer; transition: 0.1s;
         }
+        .channel-item:hover { background: #3d3d3d; }
+        .channel-item img { width: 32px; height: 32px; border: 1px solid #555; background: #000; flex-shrink: 0; }
 
-        #canvas-container.loaded { animation: none; background-image: none; border: 2px solid transparent; }
+        #canvas-container { margin-top: 10px; border-radius: 12px; background-color: #1a1a1a; display: inline-block; position: relative; border: 2px dashed #444; }
+        #canvas-container.loaded { border: 2px solid transparent; }
         canvas { max-width: 100%; height: auto; display: block; }
         
         button#download-btn { background: var(--primary); border: none; padding: 14px 28px; color: white; cursor: pointer; border-radius: 8px; font-weight: bold; font-size: 1.1rem; margin-top: 2rem; display: none; }
 
-        .version-tag {
-            position: fixed; bottom: 15px; right: 20px;
-            font-size: 0.75rem; color: rgba(255, 255, 255, 0.3);
-            pointer-events: none; user-select: none;
-        }
+        .version-tag { position: fixed; bottom: 15px; right: 20px; font-size: 0.75rem; color: rgba(255, 255, 255, 0.3); pointer-events: none; }
     </style>
 </head>
 <body>
@@ -100,9 +66,11 @@
 <main id="main-content">
     <div class="container">
         <h1>Mapify</h1>
-        <p class="subtitle">Enter a country name or upload a flag map template.</p>
         <div class="controls">
-            <input type="text" id="wiki-search" placeholder="Type country (e.g. Jordan)...">
+            <div class="search-container">
+                <input type="text" id="preset-search" placeholder="Select mapper preset..." readonly>
+                <div id="results-box"></div>
+            </div>
             <p style="font-size: 0.8rem; color: #666; margin: 0;">— OR —</p>
             <input type="file" id="upload" accept="image/*" style="background: #2d2d2d; padding: 12px; border-radius: 8px; border: 1px solid #444; color: white; cursor: pointer; width: 100%; max-width: 300px;">
         </div>
@@ -113,31 +81,54 @@
     </div>
 </main>
 
-<div class="version-tag">Mapify v2.4.3</div>
+<div class="version-tag">Mapify v2.4.7</div>
 
 <script>
-    const upload = document.getElementById('upload');
-    const searchInput = document.getElementById('wiki-search');
+    const searchInput = document.getElementById('preset-search');
+    const resultsBox = document.getElementById('results-box');
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
     const downloadBtn = document.getElementById('download-btn');
     const canvasContainer = document.getElementById('canvas-container');
-    const texture = new Image();
-    texture.src = 'grunge.png';
 
-    searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            const country = searchInput.value.trim().replace(/ /g, '_');
-            const url = `https://commons.wikimedia.org/wiki/Special:FilePath/Flag_map_of_${country}.svg?width=2000`;
-            const img = new Image();
-            img.crossOrigin = "Anonymous";
-            img.onload = () => processImage(img);
-            img.onerror = () => alert("Could not find flag map for that country.");
-            img.src = url;
-        }
+    let activeTexture = new Image();
+    let shadowSettings = { blur: 18, ox: 7.07, oy: 7.07 };
+
+    const presets = [
+        { name: "ITAE", handle: "ImThat-AustrianEmpire", wiki: "Austria-Hungary", texture: "grunge.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },
+        { name: "Willdude", handle: "WILLDUDE1", wiki: "United_States", texture: "grunge2.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },
+        { name: "Geographier", handle: "Geographier", wiki: "Germany", texture: "grunge3.png", s: { blur: 18, ox: 5.66, oy: 5.66 } }
+    ];
+
+    searchInput.onclick = () => {
+        resultsBox.style.display = resultsBox.style.display === 'block' ? 'none' : 'block';
+    };
+
+    presets.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'channel-item';
+        div.innerHTML = `<img src="https://unavatar.io/youtube/${p.handle}" alt="logo"><span>${p.name}</span>`;
+        div.onclick = () => {
+            activeTexture = new Image();
+            activeTexture.src = p.texture;
+            shadowSettings = p.s;
+            fetchWikiMap(p.wiki);
+            searchInput.value = p.name;
+            resultsBox.style.display = 'none';
+        };
+        resultsBox.appendChild(div);
     });
 
-    upload.addEventListener('change', (e) => {
+    async function fetchWikiMap(country) {
+        const url = `https://commons.wikimedia.org/wiki/Special:FilePath/Flag_map_of_${country}.svg?width=2000`;
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.onload = () => processImage(img);
+        img.onerror = () => alert("Template missing on Wikipedia.");
+        img.src = url;
+    }
+
+    document.getElementById('upload').addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
         const reader = new FileReader();
@@ -155,82 +146,30 @@
         canvas.height = img.height;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        const tempCanvas = document.createElement('canvas');
-        const tCtx = tempCanvas.getContext('2d');
-        tempCanvas.width = img.width;
-        tempCanvas.height = img.height;
-        tCtx.drawImage(img, 0, 0);
-        
-        const imageData = tCtx.getImageData(0, 0, canvas.width, canvas.height);
-        const pixels = imageData.data;
-        const visited = new Uint8Array(canvas.width * canvas.height);
-        const islands = [];
-
-        for (let i = 0; i < pixels.length; i += 4) {
-            const idx = i / 4;
-            if (pixels[i + 3] > 10 && !visited[idx]) {
-                const island = findIsland(idx, pixels, visited, canvas.width, canvas.height);
-                if (island.pixels.length > 50) islands.push(island);
-            }
-        }
-
-        ctx.shadowBlur = 18;
-        ctx.shadowOffsetX = 7.07;
-        ctx.shadowOffsetY = 7.07;
+        ctx.shadowBlur = shadowSettings.blur;
+        ctx.shadowOffsetX = shadowSettings.ox;
+        ctx.shadowOffsetY = shadowSettings.oy;
         ctx.shadowColor = "rgba(0, 0, 0, 0.70)";
         ctx.drawImage(img, 0, 0);
         ctx.shadowColor = "transparent";
 
-        islands.forEach(island => {
-            ctx.save();
-            const path = new Path2D();
-            island.pixels.forEach(p => {
-                const x = p % canvas.width;
-                const y = Math.floor(p / canvas.width);
-                path.rect(x, y, 1, 1);
-            });
-            ctx.clip(path);
-            ctx.globalAlpha = 0.60;
-            ctx.globalCompositeOperation = 'source-atop';
-            ctx.drawImage(texture, island.minX, island.minY, island.maxX - island.minX, island.maxY - island.minY);
-            ctx.restore();
-        });
+        ctx.save();
+        ctx.globalAlpha = 0.60;
+        ctx.globalCompositeOperation = 'source-atop';
+        ctx.drawImage(activeTexture, 0, 0, canvas.width, canvas.height);
+        ctx.restore();
 
         downloadBtn.style.display = 'inline-block';
     }
 
-    function findIsland(startIdx, pixels, visited, width, height) {
-        const stack = [startIdx];
-        const islandPixels = [];
-        let minX = startIdx % width, maxX = minX;
-        let minY = Math.floor(startIdx / width), maxY = minY;
-        visited[startIdx] = 1;
+    window.onclick = (e) => { if (e.target !== searchInput) resultsBox.style.display = 'none'; };
 
-        while (stack.length > 0) {
-            const curr = stack.pop();
-            islandPixels.push(curr);
-            const x = curr % width, y = Math.floor(curr / width);
-            minX = Math.min(minX, x); maxX = Math.max(maxX, x);
-            minY = Math.min(minY, y); maxY = Math.max(maxY, y);
-            const neighbors = [curr - 1, curr + 1, curr - width, curr + width];
-            neighbors.forEach(n => {
-                if (n >= 0 && n < visited.length && !visited[n] && pixels[n * 4 + 3] > 10) {
-                    if (Math.abs((n % width) - x) <= 1) {
-                        visited[n] = 1;
-                        stack.push(n);
-                    }
-                }
-            });
-        }
-        return { pixels: islandPixels, minX, maxX, minY, maxY };
-    }
-
-    downloadBtn.addEventListener('click', () => {
+    downloadBtn.onclick = () => {
         const link = document.createElement('a');
-        link.download = 'mapify_export.png';
+        link.download = `mapify_${searchInput.value.toLowerCase() || 'export'}.png`;
         link.href = canvas.toDataURL("image/png");
         link.click();
-    });
+    };
 </script>
 </body>
 </html>
