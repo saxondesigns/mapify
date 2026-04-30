@@ -6,14 +6,16 @@
     <title>Mapify</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Fixed Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
             --primary: #00ca4e;
-            --apple-bg: #f5f5f7;
-            --apple-card: rgba(255, 255, 255, 0.7);
-            --apple-text: #1d1d1f;
-            --apple-secondary: #86868b;
+            --apple-bg: #000000;
+            --apple-card: #1c1c1e;
+            --apple-text: #ffffff;
+            --apple-secondary: #8e8e93;
+            --apple-border: rgba(255, 255, 255, 0.1);
             --gold: #ffcc00;
         }
 
@@ -29,12 +31,12 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Apple Floating Sidebar/Dock */
+        /* Apple Floating Dark Sidebar */
         #sidebar { 
             width: 80px; 
-            background: rgba(255, 255, 255, 0.8); 
-            backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(0,0,0,0.05); 
+            background: rgba(28, 28, 30, 0.8); 
+            backdrop-filter: blur(25px);
+            border-right: 1px solid var(--apple-border); 
             display: flex; 
             flex-direction: column; 
             align-items: center;
@@ -52,8 +54,6 @@
             color: var(--primary); 
             margin-bottom: 3rem; 
             font-weight: 700;
-            overflow: hidden;
-            white-space: nowrap;
         }
 
         .nav-link { 
@@ -64,12 +64,12 @@
             overflow: hidden;
         }
         
-        .nav-link span { display: none; font-size: 0.9rem; font-weight: 600; }
+        .nav-link span { display: none; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
         
         #sidebar:hover .nav-link { width: 180px; justify-content: flex-start; padding-left: 20px; }
         #sidebar:hover .nav-link span { display: block; }
         
-        .nav-link:hover { background: rgba(0,0,0,0.05); transform: scale(1.05); }
+        .nav-link:hover { background: rgba(255, 255, 255, 0.1); transform: scale(1.05); }
 
         #main-wrapper { 
             margin-left: 80px; 
@@ -81,17 +81,16 @@
             width: calc(100% - 80px); 
         }
         
-        /* Clean Apple Cards */
+        /* Dark Apple Cards */
         .container { 
             background: var(--apple-card); 
-            backdrop-filter: blur(30px);
             padding: 3rem; 
             border-radius: 28px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.04); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4); 
             max-width: 700px; 
             width: 100%; 
             text-align: center; 
-            border: 1px solid rgba(255,255,255,0.4);
+            border: 1px solid var(--apple-border);
             margin-bottom: 80px; 
         }
 
@@ -101,68 +100,62 @@
         
         #preset-display { 
             display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 16px; border-radius: 14px; 
-            border: 1px solid rgba(0,0,0,0.1); background: white; color: var(--apple-text); cursor: pointer; 
+            border: 1px solid var(--apple-border); background: #2c2c2e; color: var(--apple-text); cursor: pointer; 
             min-height: 52px; font-weight: 500; transition: border-color 0.2s;
         }
         #preset-display:hover { border-color: var(--primary); }
 
         #results-box { 
-            position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid rgba(0,0,0,0.1); 
-            border-radius: 14px; margin-top: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; display: none;
+            position: absolute; top: 100%; left: 0; right: 0; background: #2c2c2e; border: 1px solid var(--apple-border); 
+            border-radius: 14px; margin-top: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); overflow: hidden; display: none; z-index: 1001;
         }
-        .channel-item { display: flex; align-items: center; padding: 12px 16px; gap: 12px; cursor: pointer; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .channel-item { display: flex; align-items: center; padding: 12px 16px; gap: 12px; cursor: pointer; border-bottom: 1px solid var(--apple-border); color: var(--apple-text); }
         .channel-item:last-child { border-bottom: none; }
-        .channel-item:hover { background: var(--apple-bg); }
+        .channel-item:hover { background: #3a3a3c; }
 
         #canvas-container { 
-            margin-top: 20px; border-radius: 20px; background: white; padding: 10px;
-            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+            margin-top: 20px; border-radius: 20px; background: #1c1c1e; padding: 10px;
+            box-shadow: inset 0 0 0 1px var(--apple-border);
         }
         canvas { border-radius: 14px; max-width: 100%; height: auto; display: block; }
         
         button#download-btn { 
-            background: var(--apple-text); border: none; padding: 16px 32px; color: white; 
+            background: var(--primary); border: none; padding: 16px 32px; color: white; 
             cursor: pointer; border-radius: 30px; font-weight: 600; margin-top: 2rem; 
-            display: none; transition: transform 0.2s, opacity 0.2s;
+            display: none; transition: transform 0.2s;
         }
-        button#download-btn:hover { transform: scale(1.02); opacity: 0.9; }
 
         /* FLAGS SECTION */
         .section-container { max-width: 1100px; width: 100%; text-align: center; margin-bottom: 100px; }
-        .section-header { font-size: 2.5rem; color: var(--apple-text); margin-bottom: 15px; font-weight: 700; letter-spacing: -0.5px; }
+        .section-header { font-size: 2.5rem; color: var(--apple-text); margin-bottom: 15px; font-weight: 700; }
         
         .flag-search-bar {
             width: 100%; padding: 18px 28px;
-            background: white; border: 1px solid rgba(0,0,0,0.1); border-radius: 18px;
+            background: #1c1c1e; border: 1px solid var(--apple-border); border-radius: 18px;
             color: var(--apple-text); font-family: inherit; outline: none;
-            transition: all 0.3s; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            transition: all 0.3s; font-size: 1.1rem;
         }
-        .flag-search-bar:focus { border-color: var(--primary); box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+        .flag-search-bar:focus { border-color: var(--primary); }
 
         /* REVIEWS GRID */
         .avg-rating { color: var(--apple-secondary); font-size: 1.1rem; margin-bottom: 40px; }
         .testimonials-grid { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; }
         .testimonial-card { 
-            background: white; padding: 30px; border-radius: 24px; 
-            border: 1px solid rgba(0,0,0,0.05); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #1c1c1e; padding: 30px; border-radius: 24px; 
+            border: 1px solid var(--apple-border); transition: all 0.3s ease;
             flex: 1 1 calc(33.333% - 24px); min-width: 280px; max-width: calc(33.333% - 24px);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
-        .testimonial-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.06); }
-        .t-pfp-container { width: 56px; height: 56px; margin-bottom: 15px; border-radius: 50%; overflow: hidden; background: var(--apple-bg); }
+        .testimonial-card:hover { transform: translateY(-8px); border-color: var(--primary); }
+        .t-pfp-container { width: 56px; height: 56px; margin-bottom: 15px; border-radius: 50%; overflow: hidden; background: #2c2c2e; }
         .t-stars { color: var(--gold); font-size: 0.8rem; margin-bottom: 12px; }
         .t-text { font-size: 1rem; color: var(--apple-text); line-height: 1.5; margin: 0; font-weight: 500; }
 
         .version-tag { position: fixed; bottom: 20px; right: 30px; font-size: 0.8rem; color: var(--apple-secondary); opacity: 0.5; }
 
-        @media (max-width: 992px) {
-            .testimonial-card { flex: 1 1 calc(50% - 24px); max-width: calc(50% - 24px); }
-        }
         @media (max-width: 768px) {
-            #sidebar { bottom: 0; height: 70px; width: 100vw; flex-direction: row; border-right: none; border-top: 1px solid rgba(0,0,0,0.05); padding: 0; justify-content: space-around; }
+            #sidebar { bottom: 0; height: 70px; width: 100vw; flex-direction: row; border-right: none; border-top: 1px solid var(--apple-border); padding: 0; justify-content: space-around; }
             #sidebar:hover { width: 100vw; }
             #main-wrapper { margin-left: 0; width: 100%; padding-bottom: 100px; }
-            .nav-link { margin-bottom: 0; }
             .testimonial-card { flex: 1 1 100%; max-width: 100%; }
         }
     </style>
@@ -171,10 +164,10 @@
 
 <aside id="sidebar">
     <div class="sidebar-header" style="margin-top: 10px; margin-bottom: 2rem;"></div>
-    <a href="https://discord.gg/kdFCt93SWe" target="_blank" class="nav-link"><i class="fab fa-discord"></i><span>Discord</span></a>
-    <a href="https://youtube.com/@SaxonMapper" target="_blank" class="nav-link"><i class="fab fa-youtube"></i><span>YouTube</span></a>
-    <a href="#flags-anchor" class="nav-link"><i class="fas fa-flag"></i><span>Flags</span></a>
-    <a href="#reviews-anchor" class="nav-link"><i class="fas fa-star"></i><span>Reviews</span></a>
+    <a href="https://discord.gg/kdFCt93SWe" target="_blank" class="nav-link"><i class="fa-brands fa-discord"></i><span>Discord</span></a>
+    <a href="https://youtube.com/@SaxonMapper" target="_blank" class="nav-link"><i class="fa-brands fa-youtube"></i><span>YouTube</span></a>
+    <a href="#flags-anchor" class="nav-link"><i class="fa-solid fa-flag"></i><span>Flags</span></a>
+    <a href="#reviews-anchor" class="nav-link"><i class="fa-solid fa-star"></i><span>Reviews</span></a>
 </aside>
 
 <div id="main-wrapper">
@@ -198,13 +191,13 @@
         <button id="download-btn">Save to Photos</button>
     </div>
 
-    <!-- FLAGS SECTION -->
+    <!-- FLAGS -->
     <div id="flags-anchor"></div>
     <section class="section-container">
         <h2 class="section-header">Browse Flags</h2>
         <div class="flag-search-container" style="position: relative; max-width: 500px; margin: 0 auto;">
             <input type="text" id="flag-search" class="flag-search-bar" placeholder="Search countries...">
-            <div id="flag-results" style="position: absolute; width: 100%; background: white; border-radius: 14px; top: 110%; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: none;"></div>
+            <div id="flag-results" style="position: absolute; width: 100%; background: #2c2c2e; border-radius: 14px; top: 110%; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: none;"></div>
         </div>
     </section>
 
@@ -248,10 +241,9 @@
     </section>
 </div>
 
-<div class="version-tag">Mapify v2.7.0</div>
+<div class="version-tag">Mapify v2.7.1</div>
 
 <script>
-    // Logic remains identical to ensure functionality
     const presetDisplay = document.getElementById('preset-display');
     const selectedLogo = document.getElementById('selected-logo');
     const selectedName = document.getElementById('selected-name');
@@ -270,7 +262,8 @@
     const presets = [
         { name: "ITAE", handle: "ImThat-AustrianEmpire", texture: "grunge.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },
         { name: "Willdude", handle: "WILLDUDE1", texture: "grunge2.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },
-        { name: "KT", handle: "knowledgetech_21", texture: "grunge3.png", s: { blur: 18, ox: 5.66, oy: 5.66 } }
+        { name: "KT", handle: "knowledgetech_21", texture: "grunge3.png", s: { blur: 18, ox: 5.66, oy: 5.66 } },
+        { name: "ITBE", handle: "ImThat-BrazilanEmpire", texture: "grunge4.png", s: { blur: 18, ox: 7.07, oy: 7.07 } }
     ];
 
     async function init() {
@@ -279,7 +272,10 @@
             const div = document.createElement('div');
             div.className = 'channel-item';
             div.innerHTML = `<img src="${logoUrl}" style="width:24px; border-radius:50%"><span>${p.name}</span>`;
-            div.onclick = () => selectPreset(p, logoUrl);
+            div.onclick = (e) => {
+                e.stopPropagation();
+                selectPreset(p, logoUrl);
+            };
             resultsBox.appendChild(div);
         });
         try {
@@ -337,7 +333,7 @@
         ctx.shadowBlur = shadowSettings.blur;
         ctx.shadowOffsetX = shadowSettings.ox;
         ctx.shadowOffsetY = shadowSettings.oy;
-        ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+        ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
         ctx.drawImage(img, 0, 0);
         ctx.shadowColor = "transparent";
         ctx.save();
@@ -349,7 +345,16 @@
         if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    presetDisplay.onclick = () => resultsBox.style.display = resultsBox.style.display === 'block' ? 'none' : 'block';
+    presetDisplay.onclick = (e) => {
+        e.stopPropagation();
+        resultsBox.style.display = resultsBox.style.display === 'block' ? 'none' : 'block';
+    };
+    
+    window.onclick = () => {
+        resultsBox.style.display = 'none';
+        flagResults.style.display = 'none';
+    };
+
     downloadBtn.onclick = () => {
         const link = document.createElement('a');
         link.download = 'mapify.png';
