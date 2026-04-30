@@ -82,7 +82,18 @@
         h1 { color: var(--primary); margin-bottom: 0.5rem; margin-top: 0; font-size: 3rem; letter-spacing: -1px; }
         p.subtitle { font-family: sans-serif; color: #aaa; margin-bottom: 2rem; font-size: 0.9rem; font-weight: normal; }
         
-        .controls { margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .controls { margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        
+        .search-container { position: relative; width: 100%; max-width: 300px; }
+        #wiki-search { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #2d2d2d; color: white; box-sizing: border-box; }
+        #search-results { 
+            position: absolute; top: 100%; left: 0; right: 0; 
+            background: #2d2d2d; border: 1px solid #444; border-radius: 0 0 8px 8px; 
+            max-height: 200px; overflow-y: auto; z-index: 10; display: none;
+        }
+        .result-item { padding: 10px; cursor: pointer; text-align: left; border-bottom: 1px solid #333; font-size: 0.9rem; }
+        .result-item:hover { background: #3d3d3d; color: var(--primary); }
+
         input[type="file"] { background: #2d2d2d; padding: 12px; border-radius: 8px; border: 1px solid #444; color: white; cursor: pointer; width: 100%; max-width: 300px; }
         
         #canvas-container { 
@@ -106,12 +117,7 @@
             100% { background-position: 15px 0, 0 100%, 0 0, 100% 15px; }
         }
 
-        #canvas-container.loaded {
-            animation: none;
-            background-image: none;
-            border: 2px solid transparent;
-        }
-
+        #canvas-container.loaded { animation: none; background-image: none; border: 2px solid transparent; }
         canvas { max-width: 100%; height: auto; display: block; }
         
         button#download-btn { background: var(--primary); border: none; padding: 14px 28px; color: white; cursor: pointer; border-radius: 8px; font-weight: bold; font-size: 1.1rem; margin-top: 2rem; display: none; transition: 0.2s; }
@@ -141,8 +147,13 @@
 <main id="main-content">
     <div class="container">
         <h1>Mapify</h1>
-        <p class="subtitle">The ultimate geocontent creation tool.</p>
+        <p class="subtitle">Search Wikipedia or upload a map.</p>
         <div class="controls">
+            <div class="search-container">
+                <input type="text" id="wiki-search" placeholder="Search country flag map...">
+                <div id="search-results"></div>
+            </div>
+            <p style="font-size: 0.8rem; color: #666; margin: 0;">— OR —</p>
             <input type="file" id="upload" accept="image/*">
         </div>
         <div id="canvas-container">
@@ -154,6 +165,8 @@
 
 <script>
     const upload = document.getElementById('upload');
+    const searchInput = document.getElementById('wiki-search');
+    const searchResults = document.getElementById('search-results');
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
     const downloadBtn = document.getElementById('download-btn');
@@ -161,65 +174,117 @@
     const texture = new Image();
     texture.src = 'grunge.png';
 
+    const countries = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahrain", "Bangladesh", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Mauritania", "Mauritius", "Mexico", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway", "Oman", "Pakistan", "Palestine", "Panama", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tunisia", "Turkey", "Turkmenistan", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"];
+
+    searchInput.addEventListener('input', () => {
+        const val = searchInput.value.toLowerCase();
+        searchResults.innerHTML = '';
+        if (!val) { searchResults.style.display = 'none'; return; }
+        const filtered = countries.filter(c => c.toLowerCase().includes(val));
+        if (filtered.length > 0) {
+            filtered.forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'result-item';
+                div.textContent = c;
+                div.onclick = () => fetchWikiMap(c);
+                searchResults.appendChild(div);
+            });
+            searchResults.style.display = 'block';
+        } else {
+            searchResults.style.display = 'none';
+        }
+    });
+
+    async function fetchWikiMap(country) {
+        searchResults.style.display = 'none';
+        searchInput.value = country;
+        const fileName = `Flag_map_of_${country.replace(/ /g, '_')}.png`;
+        const url = `https://en.wikipedia.org/w/api.php?action=query&titles=File:${fileName}&prop=imageinfo&iiprop=url&format=json&origin=*`;
+        
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            const pages = data.query.pages;
+            const pageId = Object.keys(pages)[0];
+            if (pageId === "-1") {
+                alert("Flag map not found on Wikipedia for this country.");
+                return;
+            }
+            const imgUrl = pages[pageId].imageinfo[0].url;
+            loadExternalImage(imgUrl);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    function loadExternalImage(url) {
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.onload = () => processImage(img);
+        img.src = url;
+    }
+
     upload.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
         const reader = new FileReader();
         reader.onload = (event) => {
             const img = new Image();
-            img.onload = () => {
-                canvasContainer.classList.add('loaded');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                const tempCanvas = document.createElement('canvas');
-                const tCtx = tempCanvas.getContext('2d');
-                tempCanvas.width = img.width;
-                tempCanvas.height = img.height;
-                tCtx.drawImage(img, 0, 0);
-                
-                const imageData = tCtx.getImageData(0, 0, canvas.width, canvas.height);
-                const pixels = imageData.data;
-                const visited = new Uint8Array(canvas.width * canvas.height);
-                const islands = [];
-
-                for (let i = 0; i < pixels.length; i += 4) {
-                    const idx = i / 4;
-                    if (pixels[i + 3] > 10 && !visited[idx]) {
-                        const island = findIsland(idx, pixels, visited, canvas.width, canvas.height);
-                        if (island.pixels.length > 50) islands.push(island);
-                    }
-                }
-
-                ctx.shadowBlur = 18;
-                ctx.shadowOffsetX = 7.07;
-                ctx.shadowOffsetY = 7.07;
-                ctx.shadowColor = "rgba(0, 0, 0, 0.70)";
-                ctx.drawImage(img, 0, 0);
-                ctx.shadowColor = "transparent";
-
-                islands.forEach(island => {
-                    ctx.save();
-                    const path = new Path2D();
-                    island.pixels.forEach(p => {
-                        const x = p % canvas.width;
-                        const y = Math.floor(p / canvas.width);
-                        path.rect(x, y, 1, 1);
-                    });
-                    ctx.clip(path);
-                    ctx.globalAlpha = 0.60;
-                    ctx.globalCompositeOperation = 'source-atop';
-                    ctx.drawImage(texture, island.minX, island.minY, island.maxX - island.minX, island.maxY - island.minY);
-                    ctx.restore();
-                });
-
-                downloadBtn.style.display = 'inline-block';
-            };
+            img.onload = () => processImage(img);
             img.src = event.target.result;
         };
         reader.readAsDataURL(file);
     });
+
+    function processImage(img) {
+        canvasContainer.classList.add('loaded');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        const tempCanvas = document.createElement('canvas');
+        const tCtx = tempCanvas.getContext('2d');
+        tempCanvas.width = img.width;
+        tempCanvas.height = img.height;
+        tCtx.drawImage(img, 0, 0);
+        
+        const imageData = tCtx.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = imageData.data;
+        const visited = new Uint8Array(canvas.width * canvas.height);
+        const islands = [];
+
+        for (let i = 0; i < pixels.length; i += 4) {
+            const idx = i / 4;
+            if (pixels[i + 3] > 10 && !visited[idx]) {
+                const island = findIsland(idx, pixels, visited, canvas.width, canvas.height);
+                if (island.pixels.length > 50) islands.push(island);
+            }
+        }
+
+        ctx.shadowBlur = 18;
+        ctx.shadowOffsetX = 7.07;
+        ctx.shadowOffsetY = 7.07;
+        ctx.shadowColor = "rgba(0, 0, 0, 0.70)";
+        ctx.drawImage(img, 0, 0);
+        ctx.shadowColor = "transparent";
+
+        islands.forEach(island => {
+            ctx.save();
+            const path = new Path2D();
+            island.pixels.forEach(p => {
+                const x = p % canvas.width;
+                const y = Math.floor(p / canvas.width);
+                path.rect(x, y, 1, 1);
+            });
+            ctx.clip(path);
+            ctx.globalAlpha = 0.60;
+            ctx.globalCompositeOperation = 'source-atop';
+            ctx.drawImage(texture, island.minX, island.minY, island.maxX - island.minX, island.maxY - island.minY);
+            ctx.restore();
+        });
+
+        downloadBtn.style.display = 'inline-block';
+    }
 
     function findIsland(startIdx, pixels, visited, width, height) {
         const stack = [startIdx];
