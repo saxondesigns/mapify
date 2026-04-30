@@ -94,8 +94,8 @@
         canvas { max-width: 100%; height: auto; display: block; border-radius: 8px; position: relative; z-index: 2; }
         button#download-btn { background: var(--primary); border: none; padding: 14px 28px; color: white; cursor: pointer; border-radius: 8px; font-weight: bold; margin-top: 2rem; display: none; font-family: 'Poppins', sans-serif; }
 
-        /* FLAGS SECTION - NO PREVIEWS */
-        .section-container { max-width: 900px; width: 100%; text-align: center; margin-bottom: 80px; padding-top: 20px; }
+        /* FLAGS SECTION */
+        .section-container { max-width: 1000px; width: 100%; text-align: center; margin-bottom: 80px; padding-top: 20px; }
         .section-header { font-size: 2.2rem; color: white; margin-bottom: 10px; font-weight: 700; }
         
         .flag-search-container { position: relative; width: 100%; max-width: 500px; margin: 0 auto 30px; }
@@ -114,18 +114,17 @@
 
         /* REVIEWS SECTION */
         .avg-rating { color: var(--gold); font-size: 1.1rem; margin-bottom: 30px; opacity: 0.9; }
-        .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .testimonial-card { background: var(--panel-dark); padding: 25px 20px; border-radius: 12px; border: 1px solid #333; transition: all 0.3s ease; }
         .testimonial-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 20px rgba(0, 202, 78, 0.1); }
         .t-pfp-container { width: 60px; height: 60px; margin: 0 auto 15px; overflow: hidden; border-radius: 50%; border: 2px solid #444; }
         .t-pfp { width: 100%; height: 100%; object-fit: cover; }
         .t-stars { color: var(--gold); font-size: 0.9rem; margin-bottom: 10px; }
-        .t-text { font-size: 0.95rem; font-style: italic; color: #bbb; line-height: 1.4; margin: 0; }
+        .t-text { font-size: 0.9rem; font-style: italic; color: #bbb; line-height: 1.4; margin: 0; }
 
         .version-tag { position: fixed; bottom: 15px; right: 20px; font-size: 0.75rem; color: rgba(255, 255, 255, 0.3); pointer-events: none; }
 
         @media (max-width: 768px) {
-            .testimonials-grid { grid-template-columns: 1fr; }
             #sidebar { display: none; }
             #main-wrapper { margin-left: 0; width: 100%; }
         }
@@ -180,9 +179,14 @@
         </div>
         <div class="testimonials-grid">
             <div class="testimonial-card">
-                <div class="t-pfp-container"><img src="1.jpg" class="t-pfp"></div>
+                <div class="t-pfp-container"><img src="https://unavatar.io/youtube/ImThat-AustrianEmpire" class="t-pfp"></div>
                 <div class="t-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                <p class="t-text">"That rlly happened instantly lol"</p>
+                <p class="t-text">"Very Useful"</p>
+            </div>
+            <div class="testimonial-card">
+                <div class="t-pfp-container"><img src="https://unavatar.io/youtube/UC4RgBJffMZ1mlPuLQ_R_B4g" class="t-pfp"></div>
+                <div class="t-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p class="t-text">"it is actually so Helpful for the beginners"</p>
             </div>
             <div class="testimonial-card">
                 <div class="t-pfp-container"><img src="2.jpg" class="t-pfp"></div>
@@ -190,15 +194,15 @@
                 <p class="t-text">"this is a hidden gem and how to make quick and easy flag maps for edits"</p>
             </div>
             <div class="testimonial-card">
-                <div class="t-pfp-container"><img src="3.jpg" class="t-pfp"></div>
+                <div class="t-pfp-container"><img src="1.jpg" class="t-pfp"></div>
                 <div class="t-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                <p class="t-text">"cool site lol!"</p>
+                <p class="t-text">"That rlly happened instantly lol"</p>
             </div>
         </div>
     </section>
 </div>
 
-<div class="version-tag">Mapify v2.6.5</div>
+<div class="version-tag">Mapify v2.6.6</div>
 
 <script>
     const presetDisplay = document.getElementById('preset-display');
