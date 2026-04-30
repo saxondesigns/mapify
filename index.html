@@ -94,8 +94,6 @@
         .result-item { padding: 10px; cursor: pointer; text-align: left; border-bottom: 1px solid #333; font-size: 0.9rem; }
         .result-item:hover { background: #3d3d3d; color: var(--primary); }
 
-        input[type="file"] { background: #2d2d2d; padding: 12px; border-radius: 8px; border: 1px solid #444; color: white; cursor: pointer; width: 100%; max-width: 300px; }
-        
         #canvas-container { 
             margin-top: 10px; 
             border-radius: 12px; 
@@ -122,14 +120,6 @@
         
         button#download-btn { background: var(--primary); border: none; padding: 14px 28px; color: white; cursor: pointer; border-radius: 8px; font-weight: bold; font-size: 1.1rem; margin-top: 2rem; display: none; transition: 0.2s; }
         button#download-btn:hover { background: #00ab42; transform: scale(1.05); }
-
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            #sidebar { width: 100%; border-right: none; border-bottom: 1px solid #333; padding: 20px; flex-direction: row; justify-content: space-around; align-items: center; }
-            .sidebar-header { margin-bottom: 0; font-size: 1.4rem; }
-            .nav-link { margin-bottom: 0; }
-            #main-content { padding: 20px; }
-        }
     </style>
 </head>
 <body>
@@ -147,14 +137,14 @@
 <main id="main-content">
     <div class="container">
         <h1>Mapify</h1>
-        <p class="subtitle">The ultimate geocontent tool.</p>
+        <p class="subtitle">Search for a country or upload a map.</p>
         <div class="controls">
             <div class="search-container">
-                <input type="text" id="wiki-search" placeholder="Search country flag map...">
+                <input type="text" id="wiki-search" placeholder="Type country name...">
                 <div id="search-results"></div>
             </div>
             <p style="font-size: 0.8rem; color: #666; margin: 0;">— OR —</p>
-            <input type="file" id="upload" accept="image/*">
+            <input type="file" id="upload" accept="image/*" style="background: #2d2d2d; padding: 12px; border-radius: 8px; border: 1px solid #444; color: white; cursor: pointer; width: 100%; max-width: 300px;">
         </div>
         <div id="canvas-container">
             <canvas id="mainCanvas"></canvas>
@@ -181,61 +171,35 @@
         searchResults.innerHTML = '';
         if (!val) { searchResults.style.display = 'none'; return; }
         const filtered = countries.filter(c => c.toLowerCase().includes(val));
-        if (filtered.length > 0) {
-            filtered.forEach(c => {
-                const div = document.createElement('div');
-                div.className = 'result-item';
-                div.textContent = c;
-                div.onclick = () => fetchWikiMap(c);
-                searchResults.appendChild(div);
-            });
-            searchResults.style.display = 'block';
-        } else {
-            searchResults.style.display = 'none';
-        }
+        filtered.forEach(c => {
+            const div = document.createElement('div');
+            div.className = 'result-item';
+            div.textContent = c;
+            div.onclick = () => fetchWikiMap(c);
+            searchResults.appendChild(div);
+        });
+        searchResults.style.display = filtered.length ? 'block' : 'none';
     });
 
     async function fetchWikiMap(country) {
         searchResults.style.display = 'none';
         searchInput.value = country;
         
-        const formattedName = country.replace(/ /g, '_');
-        const searchQueries = [
-            `File:Flag_map_of_${formattedName}.svg`,
-            `File:Flag_map_of_${formattedName}.png`,
-            `File:Flag_map_of_the_${formattedName}.svg`,
-            `File:Flag_map_of_the_${formattedName}.png`
-        ];
+        const fileName = `Flag_map_of_${country.replace(/ /g, '_')}.svg`;
+        const url = `https://commons.wikimedia.org/wiki/Special:FilePath/${fileName}?width=2000`;
 
-        let imgUrl = null;
-
-        for (const query of searchQueries) {
-            const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${query}&prop=imageinfo&iiprop=url|thumburl&iiurlwidth=2000&format=json&origin=*`;
-            
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                const pages = data.query.pages;
-                const pageId = Object.keys(pages)[0];
-                
-                if (pageId !== "-1") {
-                    imgUrl = pages[pageId].imageinfo[0].thumburl || pages[pageId].imageinfo[0].url;
-                    break;
-                }
-            } catch (err) { console.error(err); }
-        }
-
-        if (imgUrl) {
-            loadExternalImage(imgUrl);
-        } else {
-            alert("Wikipedia naming is a bit dodgy for this one. Try a manual upload!");
-        }
-    }
-
-    function loadExternalImage(url) {
         const img = new Image();
         img.crossOrigin = "Anonymous";
         img.onload = () => processImage(img);
+        img.onerror = () => {
+            const fallbackName = `Flag_map_of_the_${country.replace(/ /g, '_')}.svg`;
+            const fallbackUrl = `https://commons.wikimedia.org/wiki/Special:FilePath/${fallbackName}?width=2000`;
+            const fallbackImg = new Image();
+            fallbackImg.crossOrigin = "Anonymous";
+            fallbackImg.onload = () => processImage(fallbackImg);
+            fallbackImg.onerror = () => alert("Flag map not found. Try manual upload!");
+            fallbackImg.src = fallbackUrl;
+        };
         img.src = url;
     }
 
@@ -320,8 +284,7 @@
             const neighbors = [curr - 1, curr + 1, curr - width, curr + width];
             neighbors.forEach(n => {
                 if (n >= 0 && n < visited.length && !visited[n] && pixels[n * 4 + 3] > 10) {
-                    const nx = n % width;
-                    if (Math.abs(nx - x) <= 1) {
+                    if (Math.abs((n % width) - x) <= 1) {
                         visited[n] = 1;
                         stack.push(n);
                     }
@@ -333,7 +296,7 @@
 
     downloadBtn.addEventListener('click', () => {
         const link = document.createElement('a');
-        link.download = 'mapify_export.png';
+        link.download = `mapify_${searchInput.value || 'export'}.png`;
         link.href = canvas.toDataURL("image/png");
         link.click();
     });
