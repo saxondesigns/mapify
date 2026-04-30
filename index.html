@@ -15,7 +15,6 @@
             --sidebar-width: 240px;
             --discord-blue: #5865F2;
             --youtube-red: #FF0000;
-            --gold: #ffcc00;
         }
 
         html { scroll-behavior: smooth; }
@@ -53,7 +52,6 @@
         .nav-link.discord:hover::before { top: -20%; background: var(--discord-blue); transform: skewY(0deg); }
         .nav-link.youtube:hover::before { top: -20%; background: var(--youtube-red); transform: skewY(0deg); }
         .nav-link.flags:hover::before { top: -20%; background: #555; transform: skewY(0deg); }
-        .nav-link.reviews:hover::before { top: -20%; background: var(--primary); transform: skewY(0deg); }
         
         .nav-link:hover { color: white; border-color: rgba(255,255,255,0.3); }
 
@@ -80,7 +78,7 @@
         .channel-item:hover { background: #3d3d3d; }
         .channel-item img { width: 32px; height: 32px; border: 1px solid #555; border-radius: 50%; object-fit: cover; }
 
-        /* CANVAS STYLES */
+        /* CANVAS */
         #canvas-container { 
             margin-top: 10px; border-radius: 12px; background-color: #1a1a1a; display: inline-block; 
             position: relative; padding: 12px;
@@ -100,33 +98,22 @@
         .section-header { font-size: 2.2rem; color: white; margin-bottom: 10px; font-weight: 700; }
         
         .flag-search-bar {
-            width: 100%; max-width: 400px; padding: 12px 20px; margin-bottom: 30px;
+            width: 100%; max-width: 500px; padding: 15px 25px; margin-bottom: 30px;
             background: #1e1e1e; border: 1px solid #333; border-radius: 30px;
             color: white; font-family: 'Poppins', sans-serif; outline: none;
-            transition: border-color 0.3s;
+            transition: border-color 0.3s, box-shadow 0.3s; font-size: 1rem;
         }
-        .flag-search-bar:focus { border-color: var(--primary); }
+        .flag-search-bar:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 202, 78, 0.2); }
 
-        .flags-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 20px; }
+        .flags-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; }
         .flag-card { background: var(--panel-dark); padding: 15px; border-radius: 12px; border: 1px solid #333; transition: 0.3s; cursor: pointer; }
-        .flag-card:hover { border-color: var(--primary); transform: scale(1.05); }
+        .flag-card:hover { border-color: var(--primary); transform: translateY(-5px); }
         .flag-card img { width: 100%; height: auto; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .flag-name { margin-top: 10px; font-size: 0.85rem; font-weight: 700; color: #ccc; }
-
-        /* REVIEWS SECTION */
-        .avg-rating { color: var(--gold); font-size: 1.1rem; margin-bottom: 30px; opacity: 0.9; }
-        .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .testimonial-card { background: var(--panel-dark); padding: 25px 20px; border-radius: 12px; border: 1px solid #333; transition: all 0.3s ease; }
-        .testimonial-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 20px rgba(0, 202, 78, 0.1); }
-        .t-pfp-container { width: 60px; height: 60px; margin: 0 auto 15px; overflow: hidden; border-radius: 50%; border: 2px solid #444; }
-        .t-pfp { width: 100%; height: 100%; object-fit: cover; }
-        .t-stars { color: var(--gold); font-size: 0.9rem; margin-bottom: 10px; }
-        .t-text { font-size: 0.95rem; font-style: italic; color: #bbb; line-height: 1.4; margin: 0; }
+        .flag-name { margin-top: 10px; font-size: 0.9rem; font-weight: 700; color: #ccc; }
 
         .version-tag { position: fixed; bottom: 15px; right: 20px; font-size: 0.75rem; color: rgba(255, 255, 255, 0.3); pointer-events: none; }
 
         @media (max-width: 768px) {
-            .testimonials-grid { grid-template-columns: 1fr; }
             #sidebar { display: none; }
             #main-wrapper { margin-left: 0; width: 100%; }
         }
@@ -139,7 +126,6 @@
     <a href="https://discord.gg/kdFCt93SWe" target="_blank" class="nav-link discord"><i class="fab fa-discord"></i> Discord</a>
     <a href="https://youtube.com/@SaxonMapper" target="_blank" class="nav-link youtube"><i class="fab fa-youtube"></i> YouTube</a>
     <a href="#flags-anchor" class="nav-link flags"><i class="fas fa-flag"></i> Flags</a>
-    <a href="#reviews-anchor" class="nav-link reviews"><i class="fas fa-star"></i> Reviews</a>
 </aside>
 
 <div id="main-wrapper">
@@ -165,39 +151,13 @@
     <!-- FLAGS SECTION -->
     <div id="flags-anchor"></div>
     <section class="section-container">
-        <h2 class="section-header">Free Flags</h2>
-        <input type="text" id="flag-search" class="flag-search-bar" placeholder="Search for a country...">
+        <h2 class="section-header">Global Flags</h2>
+        <input type="text" id="flag-search" class="flag-search-bar" placeholder="Search every flag in the world...">
         <div class="flags-grid" id="flags-grid-inject"></div>
-    </section>
-
-    <!-- TRUSTED SECTION -->
-    <div id="reviews-anchor"></div>
-    <section class="section-container">
-        <h2 class="section-header">We're Trusted</h2>
-        <div class="avg-rating">
-            <i class="fas fa-star"></i> 5.0/5 Average Rating — "Mapping made easy, instantly."
-        </div>
-        <div class="testimonials-grid">
-            <div class="testimonial-card">
-                <div class="t-pfp-container"><img src="1.jpg" class="t-pfp"></div>
-                <div class="t-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                <p class="t-text">"That rlly happened instantly lol"</p>
-            </div>
-            <div class="testimonial-card">
-                <div class="t-pfp-container"><img src="2.jpg" class="t-pfp"></div>
-                <div class="t-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                <p class="t-text">"YOOOO"</p>
-            </div>
-            <div class="testimonial-card">
-                <div class="t-pfp-container"><img src="3.jpg" class="t-pfp"></div>
-                <div class="t-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                <p class="t-text">"cool site lol!"</p>
-            </div>
-        </div>
     </section>
 </div>
 
-<div class="version-tag">Mapify v2.6.2</div>
+<div class="version-tag">Mapify v2.6.3</div>
 
 <script>
     const presetDisplay = document.getElementById('preset-display');
@@ -222,16 +182,10 @@
         { name: "ITBE", handle: "ImThat-BrazilanEmpire", texture: "grunge4.png", s: { blur: 18, ox: 7.07, oy: 7.07 } }
     ];
 
-    const countries = [
-        { name: "Germany", code: "de" }, { name: "Austria", code: "at" }, { name: "France", code: "fr" },
-        { name: "Italy", code: "it" }, { name: "USA", code: "us" }, { name: "UK", code: "gb" },
-        { name: "Jordan", code: "jo" }, { name: "Brazil", code: "br" }, { name: "Canada", code: "ca" },
-        { name: "Japan", code: "jp" }, { name: "Russia", code: "ru" }, { name: "Australia", code: "au" }
-    ];
+    // Fetching from flagcdn directly for a comprehensive list
+    let allCountries = [];
 
-    presetDisplay.onclick = () => { resultsBox.style.display = resultsBox.style.display === 'block' ? 'none' : 'block'; };
-
-    function initPage() {
+    async function initPage() {
         // Build Mapper Search
         presets.forEach(p => {
             const logoUrl = `https://unavatar.io/youtube/${p.handle}`;
@@ -242,13 +196,20 @@
             resultsBox.appendChild(div);
         });
 
-        // Initial Flag Render
-        renderFlags(countries);
+        // Load all flags
+        try {
+            const response = await fetch('https://flagcdn.com/en/codes.json');
+            const data = await response.json();
+            allCountries = Object.entries(data).map(([code, name]) => ({ name, code }));
+            renderFlags(allCountries);
+        } catch (e) {
+            console.error("Flag load failed", e);
+        }
     }
 
     function renderFlags(list) {
         flagsGrid.innerHTML = '';
-        list.forEach(c => {
+        list.slice(0, 100).forEach(c => { // Performance slice for initial load
             const flagUrl = `https://flagcdn.com/w160/${c.code}.png`;
             const card = document.createElement('div');
             card.className = 'flag-card';
@@ -260,8 +221,8 @@
 
     flagSearchInput.oninput = () => {
         const query = flagSearchInput.value.toLowerCase();
-        const filtered = countries.filter(c => c.name.toLowerCase().includes(query));
-        renderFlags(filtered);
+        const filtered = allCountries.filter(c => c.name.toLowerCase().includes(query));
+        renderFlags(filtered.length > 0 ? filtered : []);
     };
 
     function selectPreset(p, logoUrl) {
@@ -299,13 +260,11 @@
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
         ctx.shadowBlur = shadowSettings.blur;
         ctx.shadowOffsetX = shadowSettings.ox;
         ctx.shadowOffsetY = shadowSettings.oy;
         ctx.shadowColor = "rgba(0, 0, 0, 0.70)";
         ctx.drawImage(img, 0, 0);
-        
         ctx.shadowColor = "transparent";
         ctx.save();
         ctx.globalAlpha = 0.60;
@@ -314,11 +273,11 @@
             ctx.drawImage(activeTexture, 0, 0, canvas.width, canvas.height);
         }
         ctx.restore();
-        
         downloadBtn.style.display = 'inline-block';
         if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    presetDisplay.onclick = () => { resultsBox.style.display = resultsBox.style.display === 'block' ? 'none' : 'block'; };
     window.onclick = (e) => { if (!presetDisplay.contains(e.target)) resultsBox.style.display = 'none'; };
 
     downloadBtn.onclick = () => {
@@ -329,7 +288,6 @@
     };
 
     initPage();
-    activeTexture.onload = () => { if(currentBaseImage) processImage(currentBaseImage, false); };
 </script>
 </body>
 </html>
