@@ -18,26 +18,47 @@
             --gold: #ffcc00;
         }
 
+        html { scroll-behavior: smooth; }
+
         body { font-family: 'Poppins', sans-serif; background: var(--bg-dark); color: #e0e0e0; margin: 0; display: flex; min-height: 100vh; }
 
-        #sidebar { width: var(--sidebar-width); background: var(--panel-dark); border-right: 1px solid #333; display: flex; flex-direction: column; padding: 30px 20px; box-sizing: border-box; position: fixed; height: 100vh; }
-        .sidebar-header { font-size: 1.8rem; color: var(--primary); margin-bottom: 2.5rem; letter-spacing: -1px; }
+        #sidebar { 
+            width: var(--sidebar-width); 
+            background: var(--panel-dark); 
+            border-right: 1px solid #333; 
+            display: flex; 
+            flex-direction: column; 
+            padding: 30px 20px; 
+            box-sizing: border-box; 
+            position: fixed; 
+            height: 100vh; 
+            font-family: 'Poppins', sans-serif;
+            z-index: 1000;
+        }
+        
+        .sidebar-header { font-size: 1.8rem; color: var(--primary); margin-bottom: 2.5rem; letter-spacing: -1px; font-weight: 700; }
 
         .nav-link { 
             display: flex; align-items: center; padding: 12px 15px; color: #ccc; text-decoration: none; border-radius: 8px; 
             margin-bottom: 15px; background: #262626; font-size: 0.95rem; gap: 12px;
             position: relative; overflow: hidden; border: 1px solid #333; z-index: 1; 
             transition: color 0.3s, border-color 0.3s;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
         }
+        
         .nav-link::before {
             content: ""; position: absolute; top: 100%; left: -10%; width: 120%; height: 150%;
             transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1); z-index: -1; transform: skewY(10deg);
         }
+        
         .nav-link.discord:hover::before { top: -20%; background: var(--discord-blue); transform: skewY(0deg); }
         .nav-link.youtube:hover::before { top: -20%; background: var(--youtube-red); transform: skewY(0deg); }
+        .nav-link.reviews:hover::before { top: -20%; background: var(--primary); transform: skewY(0deg); }
+        
         .nav-link:hover { color: white; border-color: rgba(255,255,255,0.3); }
 
-        #main-wrapper { margin-left: var(--sidebar-width); flex-grow: 1; padding: 40px; display: flex; flex-direction: column; align-items: center; }
+        #main-wrapper { margin-left: var(--sidebar-width); flex-grow: 1; padding: 40px; display: flex; flex-direction: column; align-items: center; width: calc(100% - var(--sidebar-width)); }
         
         .container { background: var(--panel-dark); padding: 2.5rem; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); max-width: 600px; width: 100%; text-align: center; border: 1px solid #333; margin-bottom: 40px; }
 
@@ -72,11 +93,11 @@
         #canvas-container.loaded { background-image: none; padding: 0; }
 
         canvas { max-width: 100%; height: auto; display: block; border-radius: 8px; position: relative; z-index: 2; }
-        button#download-btn { background: var(--primary); border: none; padding: 14px 28px; color: white; cursor: pointer; border-radius: 8px; font-weight: bold; margin-top: 2rem; display: none; }
+        button#download-btn { background: var(--primary); border: none; padding: 14px 28px; color: white; cursor: pointer; border-radius: 8px; font-weight: bold; margin-top: 2rem; display: none; font-family: 'Poppins', sans-serif; }
 
         /* TESTIMONIALS SECTION */
-        .testimonials-section { max-width: 900px; width: 100%; text-align: center; margin-top: 20px; }
-        .testimonials-header { font-size: 2.2rem; color: white; margin-bottom: 10px; }
+        .testimonials-section { max-width: 900px; width: 100%; text-align: center; margin-top: 20px; padding-bottom: 60px; }
+        .testimonials-header { font-size: 2.2rem; color: white; margin-bottom: 10px; font-weight: 700; }
         .avg-rating { color: var(--gold); font-size: 1.1rem; margin-bottom: 30px; opacity: 0.9; }
         
         .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
@@ -94,7 +115,7 @@
         @media (max-width: 768px) {
             .testimonials-grid { grid-template-columns: 1fr; }
             #sidebar { display: none; }
-            #main-wrapper { margin-left: 0; }
+            #main-wrapper { margin-left: 0; width: 100%; }
         }
     </style>
 </head>
@@ -104,6 +125,7 @@
     <div class="sidebar-header">Mapify</div>
     <a href="https://discord.gg/kdFCt93SWe" target="_blank" class="nav-link discord"><i class="fab fa-discord"></i> Discord</a>
     <a href="https://youtube.com/@SaxonMapper" target="_blank" class="nav-link youtube"><i class="fab fa-youtube"></i> YouTube</a>
+    <a href="#reviews-anchor" class="nav-link reviews"><i class="fas fa-star"></i> Reviews</a>
 </aside>
 
 <div id="main-wrapper">
@@ -127,10 +149,11 @@
     </div>
 
     <!-- TRUSTED SECTION -->
+    <div id="reviews-anchor"></div>
     <section class="testimonials-section">
         <h2 class="testimonials-header">We're Trusted</h2>
         <div class="avg-rating">
-            <i class="fas fa-star"></i> 4.9/5 Average Rating — "Mapping made easy, instantly."
+            <i class="fas fa-star"></i> 5.0/5 Average Rating — "Mapping made easy, instantly."
         </div>
         
         <div class="testimonials-grid">
@@ -160,7 +183,7 @@
                     <img src="3.jpg" alt="User 3" class="t-pfp">
                 </div>
                 <div class="t-stars">
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                 </div>
                 <p class="t-text">"cool site lol!"</p>
             </div>
@@ -168,7 +191,7 @@
     </section>
 </div>
 
-<div class="version-tag">Mapify v2.5.8</div>
+<div class="version-tag">Mapify v2.5.9</div>
 
 <script>
     const presetDisplay = document.getElementById('preset-display');
