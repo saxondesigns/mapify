@@ -22,7 +22,6 @@
             margin: 0; 
             display: flex;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
         #sidebar {
@@ -51,33 +50,17 @@
 
         .container { 
             background: var(--panel-dark); padding: 2.5rem; border-radius: 16px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6); max-width: 850px; width: 100%; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6); max-width: 800px; width: 100%; 
             text-align: center; border: 1px solid #333; 
         }
 
         h1 { color: var(--primary); margin-bottom: 0.5rem; font-size: 3rem; letter-spacing: -1px; }
+        p.subtitle { font-family: sans-serif; color: #aaa; margin-bottom: 2rem; font-size: 0.9rem; }
         
         .controls { margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         
-        .search-container { position: relative; width: 100%; max-width: 400px; }
-        #wiki-search { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid #444; background: #2d2d2d; color: white; box-sizing: border-box; font-size: 1rem; }
+        #wiki-search { width: 100%; max-width: 300px; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #2d2d2d; color: white; }
         
-        #search-results { 
-            position: absolute; top: 100%; left: 0; right: 0; 
-            background: #2d2d2d; border: 1px solid #444; border-radius: 0 0 8px 8px; 
-            max-height: 300px; overflow-y: auto; z-index: 999; display: none;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-        }
-
-        .result-item { 
-            display: flex; align-items: center; padding: 10px 15px; 
-            cursor: pointer; text-align: left; border-bottom: 1px solid #333; 
-            gap: 15px; transition: 0.1s;
-        }
-        .result-item:hover { background: #3d3d3d; }
-        .result-item img { width: 30px; height: 20px; object-fit: cover; border: 1px solid #555; border-radius: 0; }
-        .result-item span { font-size: 0.95rem; font-weight: bold; }
-
         #canvas-container { 
             margin-top: 10px; border-radius: 12px; background-color: #1a1a1a; 
             display: inline-block; position: relative;
@@ -102,7 +85,7 @@
         .version-tag {
             position: fixed; bottom: 15px; right: 20px;
             font-size: 0.75rem; color: rgba(255, 255, 255, 0.3);
-            pointer-events: none;
+            pointer-events: none; user-select: none;
         }
     </style>
 </head>
@@ -117,28 +100,24 @@
 <main id="main-content">
     <div class="container">
         <h1>Mapify</h1>
-        <p style="color: #aaa; margin-bottom: 20px;">Standardized Flag Maps for Mappers</p>
+        <p class="subtitle">Enter a country name or upload a flag map template.</p>
         <div class="controls">
-            <div class="search-container">
-                <input type="text" id="wiki-search" placeholder="Search country (e.g. Palestine, Kosovo, Taiwan)...">
-                <div id="search-results"></div>
-            </div>
-            <input type="file" id="upload" accept="image/*" style="display:none">
-            <button onclick="document.getElementById('upload').click()" style="background: #333; color: #fff; border: 1px solid #444; padding: 10px 20px; border-radius: 8px; cursor: pointer;">Or Upload Custom File</button>
+            <input type="text" id="wiki-search" placeholder="Type country (e.g. Jordan)...">
+            <p style="font-size: 0.8rem; color: #666; margin: 0;">— OR —</p>
+            <input type="file" id="upload" accept="image/*" style="background: #2d2d2d; padding: 12px; border-radius: 8px; border: 1px solid #444; color: white; cursor: pointer; width: 100%; max-width: 300px;">
         </div>
         <div id="canvas-container">
             <canvas id="mainCanvas"></canvas>
         </div>
-        <br>
-        <button id="download-btn">Download Final Map</button>
+        <button id="download-btn">Download Map</button>
     </div>
 </main>
 
-<div class="version-tag">Mapify v2.4.2 (Stable API)</div>
+<div class="version-tag">Mapify v2.4.3</div>
 
 <script>
+    const upload = document.getElementById('upload');
     const searchInput = document.getElementById('wiki-search');
-    const searchResults = document.getElementById('search-results');
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
     const downloadBtn = document.getElementById('download-btn');
@@ -146,67 +125,29 @@
     const texture = new Image();
     texture.src = 'grunge.png';
 
-    let countryData = [];
-
-    // 1. Fetch official list with square flags for the menu
-    async function init() {
-        try {
-            const res = await fetch('https://restcountries.com/v3.1/all?fields=name,cca2,flags');
-            const data = await res.json();
-            // Sort alphabetically for easier searching
-            countryData = data.sort((a, b) => a.name.common.localeCompare(b.name.common));
-        } catch (e) {
-            console.error("API failed to load list.");
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const country = searchInput.value.trim().replace(/ /g, '_');
+            const url = `https://commons.wikimedia.org/wiki/Special:FilePath/Flag_map_of_${country}.svg?width=2000`;
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            img.onload = () => processImage(img);
+            img.onerror = () => alert("Could not find flag map for that country.");
+            img.src = url;
         }
-    }
-
-    searchInput.addEventListener('input', () => {
-        const val = searchInput.value.toLowerCase();
-        searchResults.innerHTML = '';
-        if (!val) { searchResults.style.display = 'none'; return; }
-
-        const filtered = countryData.filter(c => 
-            c.name.common.toLowerCase().includes(val) || 
-            (c.cca2 && c.cca2.toLowerCase() === val)
-        );
-
-        filtered.forEach(c => {
-            const div = document.createElement('div');
-            div.className = 'result-item';
-            div.innerHTML = `
-                <img src="${c.flags.png}" alt="flag">
-                <span>${c.name.common}</span>
-            `;
-            div.onclick = () => fetchFlagMap(c.name.common, c.cca2);
-            searchResults.appendChild(div);
-        });
-        searchResults.style.display = filtered.length ? 'block' : 'none';
     });
 
-    async function fetchFlagMap(name, code) {
-        searchResults.style.display = 'none';
-        searchInput.value = name;
-        
-        // Using a high-res flag map provider that uses ISO codes (cca2)
-        const lowerCode = code.toLowerCase();
-        
-        // Dedicated Flag-Map URL (Handles all modern countries including Kosovo (xk), Palestine (ps), Taiwan (tw))
-        const url = `https://raw.githubusercontent.com/the-mapping-network/flag-maps/main/assets/${lowerCode}.png`;
-
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.onload = () => processImage(img);
-        img.onerror = () => {
-            // Wikipedia Fallback for specific shapes
-            const wikiUrl = `https://commons.wikimedia.org/wiki/Special:FilePath/Flag_map_of_${name.replace(/ /g, '_')}.svg?width=2000`;
-            const fallback = new Image();
-            fallback.crossOrigin = "Anonymous";
-            fallback.onload = () => processImage(fallback);
-            fallback.onerror = () => alert("Could not find a flag-map shape for this country. Please upload a shape manually.");
-            fallback.src = wikiUrl;
+    upload.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => processImage(img);
+            img.src = event.target.result;
         };
-        img.src = url;
-    }
+        reader.readAsDataURL(file);
+    });
 
     function processImage(img) {
         canvasContainer.classList.add('loaded');
@@ -233,7 +174,6 @@
             }
         }
 
-        // ORIGINAL LOGIC & SHADOW
         ctx.shadowBlur = 18;
         ctx.shadowOffsetX = 7.07;
         ctx.shadowOffsetY = 7.07;
@@ -285,7 +225,12 @@
         return { pixels: islandPixels, minX, maxX, minY, maxY };
     }
 
-    init();
+    downloadBtn.addEventListener('click', () => {
+        const link = document.createElement('a');
+        link.download = 'mapify_export.png';
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    });
 </script>
 </body>
 </html>
