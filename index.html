@@ -198,22 +198,32 @@
     async function fetchWikiMap(country) {
         searchResults.style.display = 'none';
         searchInput.value = country;
-        const fileName = `Flag_map_of_${country.replace(/ /g, '_')}.png`;
-        const url = `https://en.wikipedia.org/w/api.php?action=query&titles=File:${fileName}&prop=imageinfo&iiprop=url&format=json&origin=*`;
+        const formattedName = country.replace(/ /g, '_');
         
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
-            const pages = data.query.pages;
-            const pageId = Object.keys(pages)[0];
-            if (pageId === "-1") {
-                alert("Flag map not found on Wikipedia for this country.");
-                return;
-            }
-            const imgUrl = pages[pageId].imageinfo[0].url;
+        const possibleExtensions = ['svg', 'png', 'jpg'];
+        let imgUrl = null;
+
+        for (const ext of possibleExtensions) {
+            const fileName = `File:Flag_map_of_${formattedName}.${ext}`;
+            const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${fileName}&prop=imageinfo&iiprop=url|thumburl&iiurlwidth=2000&format=json&origin=*`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                const pages = data.query.pages;
+                const pageId = Object.keys(pages)[0];
+                
+                if (pageId !== "-1") {
+                    imgUrl = pages[pageId].imageinfo[0].thumburl || pages[pageId].imageinfo[0].url;
+                    break;
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        if (imgUrl) {
             loadExternalImage(imgUrl);
-        } catch (err) {
-            console.error(err);
+        } else {
+            alert("Flag map not found on Wikipedia. Try manual upload!");
         }
     }
 
