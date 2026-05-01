@@ -152,29 +152,49 @@
         }
         .flag-search-bar:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 202, 78, 0.15); }
 
-        /* Results Dropdown */
         #flag-results { 
             position: absolute; width: 100%; background: #2c2c2e; border-radius: 16px; 
             top: calc(100% + 10px); z-index: 100; box-shadow: 0 20px 40px rgba(0,0,0,0.4); 
             display: none; text-align: left; max-height: 400px; overflow-y: auto;
         }
 
+        /* Testimonials */
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; width: 100%; padding: 0 20px; box-sizing: border-box; }
+        .testimonial-card { 
+            background: rgba(28, 28, 30, 0.5); backdrop-filter: blur(15px); padding: 35px; border-radius: 28px; 
+            border: 1px solid var(--apple-border); transition: all 0.4s ease; text-align: left;
+        }
+        .testimonial-card:hover { transform: translateY(-10px); border-color: var(--primary); background: rgba(35, 35, 38, 0.7); }
+        .t-pfp-container { width: 60px; height: 60px; margin-bottom: 20px; border-radius: 50%; overflow: hidden; border: 2px solid var(--apple-border); }
+        .t-name { font-weight: 700; font-size: 1.1rem; color: var(--apple-text); margin-bottom: 5px; display: block; }
+        .sub-count { font-size: 0.8rem; color: var(--primary); margin-bottom: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .t-text { font-size: 1rem; color: var(--apple-secondary); line-height: 1.6; margin: 0; font-style: italic; }
+
         .version-tag { position: fixed; bottom: 20px; right: 30px; font-size: 0.8rem; color: var(--apple-secondary); opacity: 0.6; }
+
+        @media (max-width: 768px) {
+            #sidebar { bottom: 0; height: 70px; width: 100vw; flex-direction: row; border-right: none; border-top: 1px solid var(--apple-border); padding: 0; justify-content: space-around; }
+            #main-wrapper { margin-left: 0; width: 100%; padding: 40px 15px 120px; }
+            h1 { font-size: 2.8rem; }
+            .container { padding: 2rem 1.5rem; }
+            .testimonials-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
 <aside id="sidebar">
-    <div class="sidebar-header"><i class="fa-solid fa-clock-rotate-left"></i></div>
+    <div class="sidebar-header"><i class="fa-solid fa-map-location-dot"></i></div>
     <a href="https://discord.gg/kdFCt93SWe" target="_blank" class="nav-link"><i class="fa-brands fa-discord"></i><span>Discord</span></a>
     <a href="https://youtube.com/@SaxonMapper" target="_blank" class="nav-link"><i class="fa-brands fa-youtube"></i><span>YouTube</span></a>
     <a href="#flags-anchor" class="nav-link"><i class="fa-solid fa-flag"></i><span>Assets</span></a>
+    <a href="#reviews-anchor" class="nav-link"><i class="fa-solid fa-star"></i><span>Reviews</span></a>
 </aside>
 
 <div id="main-wrapper">
     <div class="container">
         <h1>Mapify</h1>
-        <p class="tagline">All eras. All flags. Instantly.</p>
+        <p class="tagline">Professional flag maps in seconds.</p>
         
         <div class="controls">
             <div class="search-container">
@@ -188,7 +208,7 @@
             
             <input type="file" id="upload" accept="image/*" style="display: none;">
             <label for="upload" style="cursor: pointer; color: var(--primary); font-weight: 700; font-size: 1.1rem;">
-                <i class="fa-solid fa-cloud-arrow-up" style="margin-right: 8px;"></i>Custom Base Map
+                <i class="fa-solid fa-cloud-arrow-up" style="margin-right: 8px;"></i>Upload Base Map
             </label>
         </div>
 
@@ -203,14 +223,39 @@
         <h2 class="section-header">Global Asset Library</h2>
         <div style="display: flex; justify-content: center; width: 100%;">
             <div style="position: relative; width: 100%; max-width: 600px;">
-                <input type="text" id="flag-search" class="flag-search-bar" placeholder="Search modern or historical (e.g. Prussia, USSR, France)...">
+                <input type="text" id="flag-search" class="flag-search-bar" placeholder="Search modern or historical flags...">
                 <div id="flag-results"></div>
+            </div>
+        </div>
+    </section>
+
+    <div id="reviews-anchor"></div>
+    <section class="section-container">
+        <h2 class="section-header">Community Verified</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="t-pfp-container"><img src="https://unavatar.io/youtube/ImThat-AustrianEmpire" style="width:100%"></div>
+                <span class="t-name">@ImThatAustrian-Empire</span>
+                <div class="sub-count">152K Subscribers</div>
+                <p class="t-text">"Very Useful"</p>
+            </div>
+            <div class="testimonial-card">
+                <div class="t-pfp-container"><img src="https://unavatar.io/youtube/UC4RgBJffMZ1mlPuLQ_R_B4g" style="width:100%"></div>
+                <span class="t-name">@Empire Editz</span>
+                <div class="sub-count">10K Subscribers</div>
+                <p class="t-text">"It is actually so helpful for beginners."</p>
+            </div>
+            <div class="testimonial-card">
+                <div class="t-pfp-container"><img src="https://unavatar.io/youtube/SaxonMapper" style="width:100%"></div>
+                <span class="t-name">@Saxon Mapper</span>
+                <div class="sub-count">1.76K Subscribers</div>
+                <p class="t-text">"Cool site lol!"</p>
             </div>
         </div>
     </section>
 </div>
 
-<div class="version-tag">Mapify v2.8.0</div>
+<div class="version-tag">Mapify v2.8.1</div>
 
 <script>
     const presetDisplay = document.getElementById('preset-display');
@@ -229,9 +274,10 @@
     let allCountries = [];
 
     const presets = [
-        { name: "ITAE", handle: "ImThat-AustrianEmpire", texture: "grunge.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },
-        { name: "Willdude", handle: "WILLDUDE1", texture: "grunge2.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },
-        { name: "KT", handle: "knowledgetech_21", texture: "grunge3.png", s: { blur: 18, ox: 5.66, oy: 5.66 } }
+        { name: "ITAE", handle: "ImThat-AustrianEmpire", texture: "https://saxondesigns.github.io/mapify/grunge.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },
+        { name: "Willdude", handle: "WILLDUDE1", texture: "https://saxondesigns.github.io/mapify/grunge2.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },
+        { name: "KT", handle: "knowledgetech_21", texture: "https://saxondesigns.github.io/mapify/grunge3.png", s: { blur: 18, ox: 5.66, oy: 5.66 } },
+        { name: "ITBE", handle: "ImThat-BrazilanEmpire", texture: "https://saxondesigns.github.io/mapify/grunge4.png", s: { blur: 18, ox: 7.07, oy: 7.07 } }
     ];
 
     async function init() {
@@ -251,6 +297,7 @@
     }
 
     function selectPreset(p, logoUrl) {
+        activeTexture.crossOrigin = "anonymous";
         activeTexture.src = p.texture;
         shadowSettings = p.s;
         selectedLogo.src = logoUrl;
@@ -260,7 +307,6 @@
         if (currentBaseImage) processImage(currentBaseImage, false);
     }
 
-    // --- INTEGRATED MODERN + HISTORICAL SEARCH ---
     flagSearchInput.oninput = async () => {
         const query = flagSearchInput.value.toLowerCase();
         if (!query || query.length < 2) { flagResults.style.display = 'none'; return; }
@@ -268,13 +314,13 @@
         flagResults.innerHTML = '';
         flagResults.style.display = 'block';
 
-        // 1. Add Modern Flags
+        // Add Modern Flags
         const modern = allCountries.filter(c => c.name.toLowerCase().includes(query)).slice(0, 5);
         modern.forEach(c => {
-            addSearchResult(`https://flagcdn.com/w640/${c.code}.png`, c.name, 'fa-flag');
+            addSearchResult(`https://flagcdn.com/w640/${c.code}.png`, c.name, `https://flagcdn.com/w40/${c.code}.png`);
         });
 
-        // 2. Fetch Historical Flags (Wikimedia API)
+        // Add Historical Flags
         try {
             const wikiUrl = `https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&list=search&srsearch=Flag+of+${query}`;
             const res = await fetch(wikiUrl);
@@ -285,44 +331,50 @@
                     addHistoricalResult(result.title);
                 }
             });
-        } catch (e) { console.log("Wiki fetch failed"); }
+        } catch (e) {}
     };
 
-    function addSearchResult(url, name, icon) {
+    function addSearchResult(url, name, thumb) {
         const div = document.createElement('div');
         div.className = 'channel-item';
-        div.innerHTML = `<i class="fa-solid ${icon}" style="color:var(--primary)"></i><span>${name}</span>`;
+        div.innerHTML = `<img src="${thumb}" style="width:24px; border-radius:2px"><span>${name}</span>`;
         div.onclick = () => {
-            const img = new Image();
-            img.crossOrigin = "anonymous";
-            img.onload = () => processImage(img);
-            img.src = url;
-            flagResults.style.display = 'none';
-            flagSearchInput.value = name;
+            loadImg(url, name);
         };
         flagResults.appendChild(div);
     }
 
-    function addHistoricalResult(title) {
+    async function addHistoricalResult(title) {
         const div = document.createElement('div');
         div.className = 'channel-item';
-        div.innerHTML = `<i class="fa-solid fa-clock-rotate-left" style="color:var(--apple-secondary)"></i><span>${title}</span>`;
-        div.onclick = async () => {
-            flagSearchInput.value = "Loading asset...";
-            const imgUrl = await getWikiImageUrl(title);
-            if (imgUrl) {
-                const img = new Image();
-                img.crossOrigin = "anonymous";
-                img.onload = () => processImage(img);
-                img.src = imgUrl;
-            }
-            flagResults.style.display = 'none';
-            flagSearchInput.value = title;
+        const imgUrl = await getWikiImageUrl(title);
+        div.innerHTML = `<img src="${imgUrl || ''}" style="width:24px; border-radius:2px; background:#444"><span>${title}</span>`;
+        div.onclick = () => {
+            loadImg(imgUrl, title);
         };
         flagResults.appendChild(div);
+    }
+
+    function loadImg(url, name) {
+        if (!url) return;
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => processImage(img);
+        img.src = url;
+        flagResults.style.display = 'none';
+        flagSearchInput.value = name;
     }
 
     async function getWikiImageUrl(title) {
+        const url = `https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=pageimages&titles=${encodeURIComponent(title)}&pithumbsize=100`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const pages = data.query.pages;
+        const pageId = Object.keys(pages)[0];
+        return pages[pageId].thumbnail ? pages[pageId].thumbnail.source : null;
+    }
+
+    async function getLargeWikiImageUrl(title) {
         const url = `https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=pageimages&titles=${encodeURIComponent(title)}&pithumbsize=1000`;
         const res = await fetch(url);
         const data = await res.json();
