@@ -271,7 +271,7 @@
     </section>
 </div>
 
-<div class="version-tag">Mapify v2.8.3</div>
+<div class="version-tag">Mapify v2.8.4</div>
 
 <script>
     const presetDisplay = document.getElementById('preset-display');
@@ -330,13 +330,11 @@
         flagResults.innerHTML = '';
         flagResults.style.display = 'block';
 
-        // Add Modern Flags
         const modern = allCountries.filter(c => c.name.toLowerCase().includes(query)).slice(0, 5);
         modern.forEach(c => {
             addSearchResult(`https://flagcdn.com/w640/${c.code}.png`, c.name, `https://flagcdn.com/w40/${c.code}.png`);
         });
 
-        // Add Historical Flags (Cleaned search query)
         try {
             const wikiUrl = `https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&list=search&srsearch=Flag+of+${query}+-intitle:"list+of"+-intitle:"history+of"+-intitle:"debate"`;
             const res = await fetch(wikiUrl);
@@ -344,7 +342,6 @@
             
             data.query.search.forEach(result => {
                 const title = result.title.toLowerCase();
-                // Filter out non-flag pages and generic lists
                 if (title.includes('flag') && !title.includes('list of') && !title.includes('history of') && !title.includes('debate')) {
                     addHistoricalResult(result.title);
                 }
@@ -362,35 +359,41 @@
 
     async function addHistoricalResult(title) {
         const thumbUrl = await getWikiImageUrl(title, 100);
-        if (!thumbUrl) return; // Only show results with valid images
+        if (!thumbUrl) return; 
 
         const div = document.createElement('div');
         div.className = 'channel-item';
         div.innerHTML = `<img src="${thumbUrl}" style="width:24px; border-radius:2px; background:#444"><span>${title}</span>`;
         div.onclick = async () => {
-            const fullUrl = await getWikiImageUrl(title, 1000);
-            loadImg(fullUrl, title);
+            const fullUrl = await getWikiImageUrl(title, 1200);
+            if (fullUrl) loadImg(fullUrl, title);
         };
         flagResults.appendChild(div);
+    }
+
+    async function getWikiImageUrl(title, size) {
+        try {
+            const url = `https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=pageimages&titles=${encodeURIComponent(title)}&pithumbsize=${size}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            const pages = data.query.pages;
+            const pageId = Object.keys(pages)[0];
+            if (pageId === "-1") return null;
+            return pages[pageId].thumbnail ? pages[pageId].thumbnail.source : null;
+        } catch (e) { return null; }
     }
 
     function loadImg(url, name) {
         if (!url) return;
         const img = new Image();
-        img.crossOrigin = "anonymous";
-        img.onload = () => processImage(img);
+        img.crossOrigin = "anonymous"; 
+        img.onload = () => {
+            processImage(img);
+            flagResults.style.display = 'none';
+            flagSearchInput.value = name;
+        };
+        img.onerror = () => { alert("Failed to load this asset. Try another?"); };
         img.src = url;
-        flagResults.style.display = 'none';
-        flagSearchInput.value = name;
-    }
-
-    async function getWikiImageUrl(title, size) {
-        const url = `https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=pageimages&titles=${encodeURIComponent(title)}&pithumbsize=${size}`;
-        const res = await fetch(url);
-        const data = await res.json();
-        const pages = data.query.pages;
-        const pageId = Object.keys(pages)[0];
-        return pages[pageId].thumbnail ? pages[pageId].thumbnail.source : null;
     }
 
     function processImage(img, scroll = true) {
@@ -421,6 +424,16 @@
     window.onclick = () => {
         resultsBox.style.display = 'none';
         flagResults.style.display = 'none';
+    };
+
+    document.getElementById('upload').onchange = function(e) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const img = new Image();
+            img.onload = function() { processImage(img); };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(e.target.files[0]);
     };
 
     downloadBtn.onclick = () => {
