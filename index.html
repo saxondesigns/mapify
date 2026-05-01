@@ -11,6 +11,7 @@
     <style>
         :root {
             --primary: #00ca4e;
+            --verified-blue: #1d9bf0;
             --apple-bg: #000000;
             --apple-card: #1c1c1e;
             --apple-text: #ffffff;
@@ -105,7 +106,9 @@
         button#download-btn:hover { background: #00b345; transform: scale(1.05); }
 
         .section-container { max-width: 1200px; width: 100%; text-align: center; margin-bottom: 120px; }
-        .section-header { font-size: 3rem; color: var(--apple-text); margin-bottom: 40px; font-weight: 800; letter-spacing: -1px; }
+        .section-header { font-size: 3rem; color: var(--apple-text); margin-bottom: 40px; font-weight: 800; letter-spacing: -1px; display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .verified-badge { color: var(--verified-blue); font-size: 2.2rem; }
+        
         .flag-search-bar { width: 100%; max-width: 600px; padding: 20px 30px; background: rgba(28, 28, 30, 0.8); border: 1px solid var(--apple-border); border-radius: 20px; color: var(--apple-text); font-family: inherit; outline: none; transition: all 0.3s; font-size: 1.1rem; text-align: center; box-sizing: border-box; }
         .flag-search-bar:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 202, 78, 0.15); }
         #flag-results { position: absolute; width: 100%; background: #2c2c2e; border-radius: 16px; top: calc(100% + 10px); z-index: 100; box-shadow: 0 20px 40px rgba(0,0,0,0.4); display: none; text-align: left; max-height: 400px; overflow-y: auto; }
@@ -124,7 +127,8 @@
             #sidebar { bottom: 0; height: 70px; width: 100vw; flex-direction: row; border-right: none; border-top: 1px solid var(--apple-border); padding: 0; justify-content: space-around; }
             #main-wrapper { margin-left: 0; width: 100%; padding: 40px 15px 120px; }
             h1 { font-size: 2.8rem; }
-            .container { padding: 2rem 1.5rem; }
+            .section-header { font-size: 2.2rem; }
+            .verified-badge { font-size: 1.6rem; }
         }
     </style>
 </head>
@@ -182,10 +186,7 @@
                 </div>
             </div>
             <div style="margin-top: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-                <div>
-                    <label class="preset-hint">Size</label>
-                    <input type="range" id="wm-size" min="10" max="250" value="60" style="width: 100%;">
-                </div>
+                <div><label class="preset-hint">Size</label><input type="range" id="wm-size" min="10" max="250" value="60" style="width: 100%;"></div>
                 <div>
                     <label class="preset-hint">X & Y Position</label>
                     <div style="display: flex; gap: 10px;">
@@ -224,7 +225,7 @@
 
     <div id="reviews-anchor"></div>
     <section class="section-container">
-        <h2 class="section-header">Community Verified</h2>
+        <h2 class="section-header">Community Verified <i class="fa-solid fa-circle-check verified-badge"></i></h2>
         <div class="testimonials-grid">
             <div class="testimonial-card"><div class="t-pfp-container"><img src="https://unavatar.io/youtube/ImThat-AustrianEmpire" style="width:100%"></div><span class="t-name">@ImThatAustrian-Empire</span><div class="sub-count">152K Subscribers</div><p class="t-text">"Very Useful"</p></div>
             <div class="testimonial-card"><div class="t-pfp-container"><img src="https://unavatar.io/youtube/UC4RgBJffMZ1mlPuLQ_R_B4g" style="width:100%"></div><span class="t-name">@Empire Editz</span><div class="sub-count">10K Subscribers</div><p class="t-text">"It is actually so helpful for beginners."</p></div>
@@ -255,23 +256,12 @@
     function drawWatermark() {
         if (!currentVideo) return;
         const text = document.getElementById('wm-text').value, size = document.getElementById('wm-size').value, font = document.getElementById('font-select').value, xP = document.getElementById('wm-x').value, yP = document.getElementById('wm-y').value, sB = document.getElementById('sh-blur').value, sX = document.getElementById('sh-ox').value, sY = document.getElementById('sh-oy').value;
-        wmCtx.globalCompositeOperation = 'source-over';
-        wmCtx.drawImage(currentVideo, 0, 0, wmCanvas.width, wmCanvas.height);
-        wmCtx.save();
-        wmCtx.globalCompositeOperation = 'overlay';
-        wmCtx.shadowBlur = sB; wmCtx.shadowOffsetX = sX; wmCtx.shadowOffsetY = sY; wmCtx.shadowColor = "rgba(0, 0, 0, 0.8)";
-        wmCtx.font = `${size}px ${font}`; wmCtx.fillStyle = "rgba(255, 255, 255, 0.8)"; wmCtx.textAlign = "center";
-        wmCtx.fillText(text, (wmCanvas.width * xP) / 100, (wmCanvas.height * yP) / 100);
-        wmCtx.restore();
+        wmCtx.globalCompositeOperation = 'source-over'; wmCtx.drawImage(currentVideo, 0, 0, wmCanvas.width, wmCanvas.height); wmCtx.save(); wmCtx.globalCompositeOperation = 'overlay'; wmCtx.shadowBlur = sB; wmCtx.shadowOffsetX = sX; wmCtx.shadowOffsetY = sY; wmCtx.shadowColor = "rgba(0, 0, 0, 0.8)"; wmCtx.font = `${size}px ${font}`; wmCtx.fillStyle = "rgba(255, 255, 255, 0.8)"; wmCtx.textAlign = "center"; wmCtx.fillText(text, (wmCanvas.width * xP) / 100, (wmCanvas.height * yP) / 100); wmCtx.restore();
     }
 
     function setupVideoPreview(url) {
         currentVideo = document.createElement('video'); currentVideo.src = url; currentVideo.muted = true; currentVideo.loop = true; currentVideo.play();
-        currentVideo.onloadedmetadata = () => {
-            wmCanvas.width = currentVideo.videoWidth; wmCanvas.height = currentVideo.videoHeight;
-            const render = () => { drawWatermark(); requestAnimationFrame(render); };
-            render();
-        };
+        currentVideo.onloadedmetadata = () => { wmCanvas.width = currentVideo.videoWidth; wmCanvas.height = currentVideo.videoHeight; const render = () => { drawWatermark(); requestAnimationFrame(render); }; render(); };
     }
 
     const presetDisplay = document.getElementById('preset-display'), selectedLogo = document.getElementById('selected-logo'), selectedName = document.getElementById('selected-name'), resultsBox = document.getElementById('results-box'), flagSearchInput = document.getElementById('flag-search'), flagResults = document.getElementById('flag-results'), canvas = document.getElementById('mainCanvas'), ctx = canvas.getContext('2d'), downloadBtn = document.getElementById('download-btn');
@@ -287,8 +277,7 @@
         presets.forEach(p => {
             const logoUrl = `https://unavatar.io/youtube/${p.handle}`, div = document.createElement('div');
             div.className = 'channel-item'; div.innerHTML = `<img src="${logoUrl}" style="width:28px; border-radius:50%"><span>${p.name}</span>`;
-            div.onclick = (e) => { e.stopPropagation(); selectPreset(p, logoUrl); };
-            resultsBox.appendChild(div);
+            div.onclick = (e) => { e.stopPropagation(); selectPreset(p, logoUrl); }; resultsBox.appendChild(div);
         });
         try { const res = await fetch('https://flagcdn.com/en/codes.json'), data = await res.json(); allCountries = Object.entries(data).map(([code, name]) => ({ name, code })); } catch (e) {}
     }
@@ -300,30 +289,14 @@
         if (!query || query.length < 2) { flagResults.style.display = 'none'; return; }
         flagResults.innerHTML = ''; flagResults.style.display = 'block';
         allCountries.filter(c => c.name.toLowerCase().includes(query)).slice(0, 5).forEach(c => addSearchResult(`https://flagcdn.com/w640/${c.code}.png`, c.name, `https://flagcdn.com/w40/${c.code}.png`));
-        try {
-            const res = await fetch(`https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&list=search&srsearch=Flag+of+${query}+-intitle:"list+of"`);
-            const data = await res.json();
-            data.query.search.forEach(r => { if (r.title.toLowerCase().includes('flag')) addHistoricalResult(r.title); });
-        } catch (e) {}
+        try { const res = await fetch(`https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&list=search&srsearch=Flag+of+${query}+-intitle:"list+of"`); const data = await res.json(); data.query.search.forEach(r => { if (r.title.toLowerCase().includes('flag')) addHistoricalResult(r.title); }); } catch (e) {}
     };
 
     function addSearchResult(url, name, thumb) { const div = document.createElement('div'); div.className = 'channel-item'; div.innerHTML = `<img src="${thumb}" style="width:24px"><span>${name}</span>`; div.onclick = () => loadImg(url, name); flagResults.appendChild(div); }
-    async function addHistoricalResult(t) { 
-        const thumb = await getWikiImg(t, 100); if (!thumb) return;
-        const div = document.createElement('div'); div.className = 'channel-item'; div.innerHTML = `<img src="${thumb}" style="width:24px"><span>${t}</span>`;
-        div.onclick = async () => { const full = await getWikiImg(t, 1200); if (full) loadImg(full, t); }; flagResults.appendChild(div);
-    }
+    async function addHistoricalResult(t) { const thumb = await getWikiImg(t, 100); if (!thumb) return; const div = document.createElement('div'); div.className = 'channel-item'; div.innerHTML = `<img src="${thumb}" style="width:24px"><span>${t}</span>`; div.onclick = async () => { const full = await getWikiImg(t, 1200); if (full) loadImg(full, t); }; flagResults.appendChild(div); }
     async function getWikiImg(t, s) { try { const r = await fetch(`https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=pageimages&titles=${encodeURIComponent(t)}&pithumbsize=${s}`), d = await r.json(), p = d.query.pages, id = Object.keys(p)[0]; return p[id].thumbnail ? p[id].thumbnail.source : null; } catch(e){return null;} }
-
     function loadImg(url, name) { const img = new Image(); img.crossOrigin = "anonymous"; img.onload = () => { processImage(img); flagResults.style.display = 'none'; flagSearchInput.value = name; }; img.src = url; }
-    function processImage(img, scroll = true) {
-        currentBaseImage = img; canvas.width = img.width; canvas.height = img.height;
-        ctx.shadowBlur = shadowSettings.blur; ctx.shadowOffsetX = shadowSettings.ox; ctx.shadowOffsetY = shadowSettings.oy; ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
-        ctx.drawImage(img, 0, 0); ctx.shadowColor = "transparent"; ctx.save(); ctx.globalAlpha = 0.5; ctx.globalCompositeOperation = 'source-atop';
-        if (activeTexture.complete && activeTexture.src) ctx.drawImage(activeTexture, 0, 0, canvas.width, canvas.height);
-        ctx.restore(); downloadBtn.style.display = 'block'; if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
+    function processImage(img, scroll = true) { currentBaseImage = img; canvas.width = img.width; canvas.height = img.height; ctx.shadowBlur = shadowSettings.blur; ctx.shadowOffsetX = shadowSettings.ox; ctx.shadowOffsetY = shadowSettings.oy; ctx.shadowColor = "rgba(0, 0, 0, 0.7)"; ctx.drawImage(img, 0, 0); ctx.shadowColor = "transparent"; ctx.save(); ctx.globalAlpha = 0.5; ctx.globalCompositeOperation = 'source-atop'; if (activeTexture.complete && activeTexture.src) ctx.drawImage(activeTexture, 0, 0, canvas.width, canvas.height); ctx.restore(); downloadBtn.style.display = 'block'; if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' }); }
     presetDisplay.onclick = (e) => { e.stopPropagation(); resultsBox.style.display = resultsBox.style.display === 'block' ? 'none' : 'block'; };
     window.onclick = () => { resultsBox.style.display = 'none'; flagResults.style.display = 'none'; };
     document.getElementById('upload').onchange = (e) => { const r = new FileReader(); r.onload = (ev) => { const i = new Image(); i.onload = () => processImage(i); i.src = ev.target.result; }; r.readAsDataURL(e.target.files[0]); };
