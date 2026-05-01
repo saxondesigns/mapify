@@ -336,6 +336,8 @@ function selectPreset(p, logoUrl) {
     ctx.drawImage(img, 0, 0); 
     ctx.restore(); 
     
+    ctx.drawImage(img, 0, 0); 
+
     if (activeTexture.complete && activeTexture.src) {
         ctx.save();
         ctx.globalCompositeOperation = 'source-atop';
