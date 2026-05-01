@@ -108,7 +108,7 @@
         .section-container { max-width: 1200px; width: 100%; text-align: center; margin-bottom: 120px; }
         .section-header { font-size: 3rem; color: var(--apple-text); margin-bottom: 40px; font-weight: 800; letter-spacing: -1px; display: flex; align-items: center; justify-content: center; gap: 12px; }
         
-        /* Twitter-style Verified Badge */
+
         .verified-badge { width: 32px; height: 32px; fill: var(--verified-blue); }
 
         .flag-search-bar { width: 100%; max-width: 600px; padding: 20px 30px; background: rgba(28, 28, 30, 0.8); border: 1px solid var(--apple-border); border-radius: 20px; color: var(--apple-text); font-family: inherit; outline: none; transition: all 0.3s; font-size: 1.1rem; text-align: center; box-sizing: border-box; }
@@ -291,14 +291,14 @@
         try { const res = await fetch('https://flagcdn.com/en/codes.json'), data = await res.json(); allCountries = Object.entries(data).map(([code, name]) => ({ name, code })); } catch (e) {}
     }
 
-    let currentBlendMode = 'source-atop'; // Add this line above the function if it's not there
+    let currentBlendMode = 'source-atop';
 
 function selectPreset(p, logoUrl) { 
     activeTexture.crossOrigin = "anonymous"; 
     activeTexture.src = p.texture; 
     shadowSettings = p.s; 
     
-    // This part is the new addition:
+
     currentBlendMode = p.blend || 'source-atop'; 
     
     selectedLogo.src = logoUrl; 
