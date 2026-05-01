@@ -279,7 +279,7 @@
         { name: "KT", handle: "knowledgetech_21", texture: "https://saxondesigns.github.io/mapify/grunge3.png", s: { blur: 18, ox: 5.66, oy: 5.66 } },
         { name: "ITBE", handle: "ImThat-BrazilanEmpire", texture: "https://saxondesigns.github.io/mapify/grunge4.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },
         { name: "Geographic Edits", handle: "UCc2olH4OKeHMNllPIJHWcSQ", texture: "https://saxondesigns.github.io/mapify/grunge5.png", s: { blur: 10, ox: 5.85, oy: 5.45} },
-        { name: "Austro-Canadian_Editz", handle: "@Austro-Canadian_Editz", texture: "https://saxondesigns.github.io/mapify/grunge6.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },       
+        { name: "Austro-Canadian_Editz", handle: "Austro-Canadian_Editz", texture: "https://saxondesigns.github.io/mapify/grunge6.png", s: { blur: 18, ox: 7.07, oy: 7.07 } , blend: 'multiply' }       
     ];
 
     async function init() {
@@ -291,7 +291,23 @@
         try { const res = await fetch('https://flagcdn.com/en/codes.json'), data = await res.json(); allCountries = Object.entries(data).map(([code, name]) => ({ name, code })); } catch (e) {}
     }
 
-    function selectPreset(p, logoUrl) { activeTexture.crossOrigin = "anonymous"; activeTexture.src = p.texture; shadowSettings = p.s; selectedLogo.src = logoUrl; selectedLogo.style.display = 'block'; selectedName.innerText = p.name; resultsBox.style.display = 'none'; if (currentBaseImage) processImage(currentBaseImage, false); }
+    let currentBlendMode = 'source-atop'; // Add this line above the function if it's not there
+
+function selectPreset(p, logoUrl) { 
+    activeTexture.crossOrigin = "anonymous"; 
+    activeTexture.src = p.texture; 
+    shadowSettings = p.s; 
+    
+    // This part is the new addition:
+    currentBlendMode = p.blend || 'source-atop'; 
+    
+    selectedLogo.src = logoUrl; 
+    selectedLogo.style.display = 'block'; 
+    selectedName.innerText = p.name; 
+    resultsBox.style.display = 'none'; 
+    
+    if (currentBaseImage) processImage(currentBaseImage, false); 
+}
     
     flagSearchInput.oninput = async () => {
         const query = flagSearchInput.value.toLowerCase();
@@ -305,7 +321,41 @@
     async function addHistoricalResult(t) { const thumb = await getWikiImg(t, 100); if (!thumb) return; const div = document.createElement('div'); div.className = 'channel-item'; div.innerHTML = `<img src="${thumb}" style="width:24px"><span>${t}</span>`; div.onclick = async () => { const full = await getWikiImg(t, 1200); if (full) loadImg(full, t); }; flagResults.appendChild(div); }
     async function getWikiImg(t, s) { try { const r = await fetch(`https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=pageimages&titles=${encodeURIComponent(t)}&pithumbsize=${s}`), d = await r.json(), p = d.query.pages, id = Object.keys(p)[0]; return p[id].thumbnail ? p[id].thumbnail.source : null; } catch(e){return null;} }
     function loadImg(url, name) { const img = new Image(); img.crossOrigin = "anonymous"; img.onload = () => { processImage(img); flagResults.style.display = 'none'; flagSearchInput.value = name; }; img.src = url; }
-    function processImage(img, scroll = true) { currentBaseImage = img; canvas.width = img.width; canvas.height = img.height; ctx.shadowBlur = shadowSettings.blur; ctx.shadowOffsetX = shadowSettings.ox; ctx.shadowOffsetY = shadowSettings.oy; ctx.shadowColor = "rgba(0, 0, 0, 0.7)"; ctx.drawImage(img, 0, 0); ctx.shadowColor = "transparent"; ctx.save(); ctx.globalAlpha = 0.5; ctx.globalCompositeOperation = 'source-atop'; if (activeTexture.complete && activeTexture.src) ctx.drawImage(activeTexture, 0, 0, canvas.width, canvas.height); ctx.restore(); downloadBtn.style.display = 'block'; if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    function processImage(img, scroll = true) { 
+    currentBaseImage = img; 
+    canvas.width = img.width; 
+    canvas.height = img.height; 
+    
+    // 1. Draw the base map with the shadow
+    ctx.shadowBlur = shadowSettings.blur; 
+    ctx.shadowOffsetX = shadowSettings.ox; 
+    ctx.shadowOffsetY = shadowSettings.oy; 
+    ctx.shadowColor = "rgba(0, 0, 0, 0.7)"; 
+    ctx.drawImage(img, 0, 0); 
+    ctx.shadowColor = "transparent"; 
+    
+    // 2. Draw the Texture
+    if (activeTexture.complete && activeTexture.src) {
+        ctx.save();
+        
+        // This ensures the grunge only stays inside the map lines
+        ctx.globalCompositeOperation = 'source-atop';
+        ctx.globalAlpha = 0.5; // You can change this to make it more or less visible
+        
+        // If the preset has 'multiply', we apply it here
+        if (currentBlendMode === 'multiply') {
+            // We draw it once to fill the shape, then switch mode to multiply the details
+            ctx.drawImage(activeTexture, 0, 0, canvas.width, canvas.height);
+            ctx.globalCompositeOperation = 'multiply';
+        }
+        
+        ctx.drawImage(activeTexture, 0, 0, canvas.width, canvas.height);
+        ctx.restore();
+    }
+    
+    downloadBtn.style.display = 'block'; 
+    if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' }); 
+}
     presetDisplay.onclick = (e) => { e.stopPropagation(); resultsBox.style.display = resultsBox.style.display === 'block' ? 'none' : 'block'; };
     window.onclick = () => { resultsBox.style.display = 'none'; flagResults.style.display = 'none'; };
     document.getElementById('upload').onchange = (e) => { const r = new FileReader(); r.onload = (ev) => { const i = new Image(); i.onload = () => processImage(i); i.src = ev.target.result; }; r.readAsDataURL(e.target.files[0]); };
