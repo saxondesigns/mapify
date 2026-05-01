@@ -155,6 +155,7 @@
             background: rgba(28, 28, 30, 0.8); border: 1px solid var(--apple-border); border-radius: 20px;
             color: var(--apple-text); font-family: inherit; outline: none;
             transition: all 0.3s; font-size: 1.1rem; text-align: center;
+            box-sizing: border-box; /* Ensures padding doesn't break width */
         }
         .flag-search-bar:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 202, 78, 0.15); }
 
@@ -227,7 +228,7 @@
         <div style="display: flex; justify-content: center; width: 100%;">
             <div style="position: relative; width: 100%; max-width: 600px;">
                 <input type="text" id="flag-search" class="flag-search-bar" placeholder="Search for any country flag...">
-                <div id="flag-results" style="position: absolute; width: 100%; background: #2c2c2e; border-radius: 16px; top: calc(100% + 10px); z-index: 100; box-shadow: 0 20px 40px rgba(0,0,0,0.4); display: none;"></div>
+                <div id="flag-results" style="position: absolute; width: 100%; background: #2c2c2e; border-radius: 16px; top: calc(100% + 10px); z-index: 100; box-shadow: 0 20px 40px rgba(0,0,0,0.4); display: none; text-align: left;"></div>
             </div>
         </div>
     </section>
