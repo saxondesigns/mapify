@@ -155,6 +155,16 @@
                     <span id="selected-name">Choose Style Preset</span>
                 </div>
                 <div id="results-box"></div>
+</div>
+<div style="width:100%; margin-top: 20px; padding: 25px; background: rgba(255,255,255,0.03); border-radius: 20px; border: 1px solid var(--apple-border); text-align: left;">
+    <label class="preset-hint" style="color: var(--primary); font-weight: 800;"><i class="fa-solid fa-circle-nodes"></i> DROP SHADOW PRO</label>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
+        <div><label class="preset-hint" style="font-size: 0.7rem;">Blur</label><input type="range" id="ds-blur" min="0" max="100" value="18" style="width: 100%;"></div>
+        <div><label class="preset-hint" style="font-size: 0.7rem;">Color</label><input type="color" id="ds-color" value="#000000" style="width: 100%; height: 30px; border: none; background: none; cursor: pointer;"></div>
+        <div><label class="preset-hint" style="font-size: 0.7rem;">Offset X</label><input type="range" id="ds-ox" min="-50" max="50" value="7" style="width: 100%;"></div>
+        <div><label class="preset-hint" style="font-size: 0.7rem;">Offset Y</label><input type="range" id="ds-oy" min="-50" max="50" value="7" style="width: 100%;"></div>
+    </div>
+</div>
             </div>
             <input type="file" id="upload" accept="image/*" style="display: none;">
             <label for="upload" style="cursor: pointer; color: var(--primary); font-weight: 700; font-size: 1.1rem;">
