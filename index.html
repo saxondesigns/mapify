@@ -97,64 +97,49 @@
         h1 { color: var(--apple-text); margin-bottom: 10px; font-size: 4rem; letter-spacing: -2px; font-weight: 800; }
         .tagline { color: var(--apple-secondary); font-size: 1.2rem; font-weight: 500; margin-bottom: 3rem; }
 
-        .controls { display: flex; flex-direction: column; align-items: center; gap: 25px; margin-bottom: 3rem; width: 100%; }
-        .search-container { width: 100%; max-width: 450px; position: relative; }
-
-        #preset-display { 
-            display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; 
-            padding: 15px; border-radius: 16px; border: 1px solid var(--apple-border); 
-            background: rgba(44, 44, 46, 0.8); color: var(--apple-text); cursor: pointer; 
-            min-height: 56px; font-weight: 600; transition: all 0.3s ease;
+        /* Flags Search */
+        .flag-search-bar {
+            width: 100%; max-width: 600px; padding: 20px 30px;
+            background: rgba(28, 28, 30, 0.8); border: 1px solid var(--apple-border); border-radius: 20px;
+            color: var(--apple-text); font-family: inherit; outline: none;
+            transition: all 0.3s; font-size: 1.1rem; text-align: center;
         }
+        .flag-search-bar:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 202, 78, 0.15); }
 
-        #results-box { 
-            position: absolute; top: calc(100% + 10px); left: 0; right: 0; background: #2c2c2e; 
-            border: 1px solid var(--apple-border); border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.5); 
-            overflow: hidden; display: none; z-index: 1001;
+        /* Reviews Grid */
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; width: 100%; padding: 0 20px; box-sizing: border-box; }
+        .testimonial-card { 
+            background: rgba(28, 28, 30, 0.5); backdrop-filter: blur(15px); padding: 35px; border-radius: 28px; 
+            border: 1px solid var(--apple-border); transition: all 0.4s ease; text-align: left;
         }
-        
-        .channel-item { display: flex; align-items: center; padding: 14px 20px; gap: 15px; cursor: pointer; border-bottom: 1px solid var(--apple-border); color: var(--apple-text); }
-        .channel-item:hover { background: #3a3a3c; }
+        .testimonial-card:hover { transform: translateY(-10px); border-color: var(--primary); background: rgba(35, 35, 38, 0.7); }
+        .t-pfp-container { width: 60px; height: 60px; margin-bottom: 20px; border-radius: 50%; overflow: hidden; border: 2px solid var(--apple-border); }
+        .t-name { font-weight: 700; font-size: 1.1rem; color: var(--apple-text); margin-bottom: 5px; display: block; }
+        .sub-count { font-size: 0.8rem; color: var(--primary); margin-bottom: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .t-text { font-size: 1rem; color: var(--apple-secondary); line-height: 1.6; margin: 0; font-style: italic; }
+        .stars-display { color: var(--gold); font-size: 0.9rem; margin-bottom: 10px; }
+
+        /* Review Form */
+        .review-form {
+            background: rgba(28, 28, 30, 0.8); border: 1px solid var(--apple-border);
+            padding: 30px; border-radius: 24px; max-width: 600px; width: 100%;
+            margin-bottom: 60px; text-align: left; animation: fadeInUp 1s ease;
+        }
+        .star-rating { color: var(--apple-secondary); font-size: 1.5rem; margin-bottom: 15px; cursor: pointer; }
+        .star-rating .fa-star.active { color: var(--gold); }
+        .review-input, .name-input {
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--apple-border);
+            padding: 15px; border-radius: 12px; color: white; font-family: inherit; margin-bottom: 15px; outline: none; box-sizing: border-box;
+        }
+        .submit-review-btn { background: var(--primary); color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; width: 100%; }
 
         #canvas-container { margin: 40px auto; border-radius: 24px; background: #121212; padding: 15px; box-shadow: 0 0 0 1px var(--apple-border); max-width: 90%; }
         canvas { border-radius: 14px; max-width: 100%; height: auto; display: block; margin: 0 auto; }
         
         button#download-btn { background: var(--primary); border: none; padding: 18px 40px; color: white; cursor: pointer; border-radius: 35px; font-weight: 700; display: none; margin: 20px auto 0; }
 
-        /* REVIEW SYSTEM STYLES */
-        .review-form {
-            background: rgba(28, 28, 30, 0.8);
-            border: 1px solid var(--apple-border);
-            padding: 30px;
-            border-radius: 24px;
-            max-width: 600px;
-            width: 100%;
-            margin-bottom: 60px;
-            text-align: left;
-        }
-        .star-rating { color: var(--apple-secondary); font-size: 1.5rem; margin-bottom: 15px; cursor: pointer; }
-        .star-rating .fa-star.active { color: var(--gold); }
-        
-        .review-input, .name-input {
-            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--apple-border);
-            padding: 15px; border-radius: 12px; color: white; font-family: inherit; margin-bottom: 15px; outline: none;
-        }
-        .review-input:focus { border-color: var(--primary); }
-        
-        .submit-review-btn {
-            background: var(--apple-text); color: black; border: none; padding: 12px 25px;
-            border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s;
-        }
-        .submit-review-btn:hover { background: var(--primary); color: white; }
-
-        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; width: 100%; padding: 0 20px; box-sizing: border-box; }
-        .testimonial-card { background: rgba(28, 28, 30, 0.5); padding: 35px; border-radius: 28px; border: 1px solid var(--apple-border); text-align: left; transition: 0.3s; }
-        .testimonial-card:hover { border-color: var(--primary); }
-        .t-pfp-container { width: 60px; height: 60px; margin-bottom: 20px; border-radius: 50%; overflow: hidden; background: #333; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--primary); }
-        .stars-display { color: var(--gold); font-size: 0.8rem; margin-bottom: 5px; }
-
         .section-container { max-width: 1200px; width: 100%; text-align: center; margin-bottom: 120px; }
-        .section-header { font-size: 3rem; color: var(--apple-text); margin-bottom: 40px; font-weight: 800; }
+        .section-header { font-size: 3rem; color: var(--apple-text); margin-bottom: 40px; font-weight: 800; letter-spacing: -1px; }
         .version-tag { position: fixed; bottom: 20px; right: 30px; font-size: 0.8rem; color: var(--apple-secondary); opacity: 0.6; }
     </style>
 </head>
@@ -173,14 +158,6 @@
         <h1>Mapify</h1>
         <p class="tagline">Professional flag maps in seconds.</p>
         <div class="controls">
-            <div class="search-container">
-                <span class="preset-hint">Select a preset from the top geotubers</span>
-                <div id="preset-display">
-                    <img id="selected-logo" src="" alt="" style="width:28px; height:28px; border-radius:50%; display:none;">
-                    <span id="selected-name">Choose Style Preset</span>
-                </div>
-                <div id="results-box"></div>
-            </div>
             <div style="margin-top: 10px;">
                 <input type="file" id="upload" accept="image/*" style="display: none;">
                 <label for="upload" style="cursor: pointer; color: var(--primary); font-weight: 700; font-size: 1.1rem;">
@@ -194,10 +171,24 @@
         </div>
     </div>
 
-    <!-- Review Submission -->
+    <!-- Flags Section -->
+    <div id="flags-anchor"></div>
+    <section class="section-container">
+        <h2 class="section-header">Global Assets</h2>
+        <div style="display: flex; justify-content: center; width: 100%;">
+            <div style="position: relative; width: 100%; max-width: 600px;">
+                <input type="text" id="flag-search" class="flag-search-bar" placeholder="Search for any country flag...">
+                <div id="flag-results" style="position: absolute; width: 100%; background: #2c2c2e; border-radius: 16px; top: calc(100% + 10px); z-index: 100; display: none; text-align: left;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
     <div id="reviews-anchor"></div>
     <section class="section-container">
-        <h2 class="section-header">Leave a Review</h2>
+        <h2 class="section-header">Community Reviews</h2>
+        
+        <!-- Leave a Review Form -->
         <div style="display: flex; justify-content: center;">
             <div class="review-form">
                 <div class="star-rating" id="star-input">
@@ -207,28 +198,34 @@
                     <i class="fa-solid fa-star" data-val="4"></i>
                     <i class="fa-solid fa-star" data-val="5"></i>
                 </div>
-                <input type="text" id="rev-name" class="name-input" placeholder="Your YouTube Handle (e.g. @User)">
-                <textarea id="rev-text" class="review-input" rows="3" placeholder="How's the mapping today?"></textarea>
-                <button class="submit-review-btn" onclick="submitReview()">Post Review</button>
+                <input type="text" id="rev-name" class="name-input" placeholder="YouTube Handle (e.g. @SaxonMapper)">
+                <textarea id="rev-text" class="review-input" rows="3" placeholder="Write your review..."></textarea>
+                <button class="submit-review-btn" onclick="submitReview()">Post to Mapify</button>
             </div>
         </div>
 
         <div class="testimonials-grid" id="reviews-list">
-            <!-- Initial Pre-loaded Reviews -->
+            <!-- Default Reviews -->
             <div class="testimonial-card">
-                <div class="stars-display"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <div class="t-pfp-container"><img src="https://unavatar.io/youtube/SaxonMapper" style="width:100%"></div>
                 <span class="t-name">@Saxon Mapper</span>
-                <div class="sub-count">Verified Creator</div>
+                <div class="sub-count">Developer</div>
                 <p class="t-text">"Cool site lol!"</p>
+            </div>
+            <div class="testimonial-card">
+                <div class="t-pfp-container"><img src="https://unavatar.io/youtube/ImThat-AustrianEmpire" style="width:100%"></div>
+                <span class="t-name">@ImThatAustrian-Empire</span>
+                <div class="sub-count">152K Subscribers</div>
+                <p class="t-text">"Very Useful"</p>
             </div>
         </div>
     </section>
 </div>
 
-<div class="version-tag">Mapify v2.8.0</div>
+<div class="version-tag">Mapify v2.8.1</div>
 
 <script>
-    // Star Rating Logic
+    // Review logic
     let currentRating = 0;
     const stars = document.querySelectorAll('#star-input i');
     stars.forEach(star => {
@@ -238,78 +235,86 @@
         };
     });
 
-    // Moderation & Submission
     function submitReview() {
-        const name = document.getElementById('rev-name').value;
-        const text = document.getElementById('rev-text').value;
-        const badWords = ['spam', 'badword1', 'badword2']; // Simple moderation list
+        const nameInput = document.getElementById('rev-name').value.trim();
+        const text = document.getElementById('rev-text').value.trim();
+        const handle = nameInput.startsWith('@') ? nameInput.substring(1) : nameInput;
 
-        if (!name || !text || currentRating === 0) {
-            alert("Fill in the blanks and rate it, mate!");
-            return;
-        }
-
-        if (badWords.some(word => text.toLowerCase().includes(word))) {
-            alert("Keep it clean! Your review contains moderated content.");
+        if (!handle || !text || currentRating === 0) {
+            alert("Fill it all in first, mate!");
             return;
         }
 
         const list = document.getElementById('reviews-list');
         const card = document.createElement('div');
         card.className = 'testimonial-card';
-        card.style.animation = 'fadeInUp 0.5s ease-out';
+        card.style.animation = 'fadeInUp 0.6s ease-out';
         
         let starsHtml = '';
         for(let i=0; i<5; i++) starsHtml += `<i class="fa-solid fa-star" style="color:${i < currentRating ? '#ffcc00' : '#8e8e93'}"></i>`;
 
         card.innerHTML = `
+            <div class="t-pfp-container"><img src="https://unavatar.io/youtube/${handle}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'" style="width:100%"></div>
             <div class="stars-display">${starsHtml}</div>
-            <span class="t-name">${name}</span>
-            <div class="sub-count">Just Now</div>
+            <span class="t-name">@${handle}</span>
+            <div class="sub-count">Community Member</div>
             <p class="t-text">"${text}"</p>
         `;
         
         list.prepend(card);
-        
-        // Reset form
         document.getElementById('rev-name').value = '';
         document.getElementById('rev-text').value = '';
         currentRating = 0;
         stars.forEach(s => s.classList.remove('active'));
     }
 
-    // --- RE-INTEGRATING YOUR PREVIOUS CORE LOGIC ---
-    const presetDisplay = document.getElementById('preset-display');
-    const resultsBox = document.getElementById('results-box');
+    // Flag logic
+    const flagSearchInput = document.getElementById('flag-search');
+    const flagResults = document.getElementById('flag-results');
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
-    const upload = document.getElementById('upload');
     const downloadBtn = document.getElementById('download-btn');
+    let allCountries = [];
 
-    const presets = [
-        { name: "ITAE", handle: "ImThat-AustrianEmpire", texture: "grunge.png", s: { blur: 18, ox: 7.07, oy: 7.07 } },
-        { name: "Willdude", handle: "WILLDUDE1", texture: "grunge2.png", s: { blur: 18, ox: 7.07, oy: 7.07 } }
-    ];
-
-    function initPresets() {
-        presets.forEach(p => {
-            const div = document.createElement('div');
-            div.className = 'channel-item';
-            div.innerHTML = `<img src="https://unavatar.io/youtube/${p.handle}" style="width:24px; border-radius:50%"><span>${p.name}</span>`;
-            div.onclick = () => {
-                document.getElementById('selected-name').innerText = p.name;
-                resultsBox.style.display = 'none';
-            };
-            resultsBox.appendChild(div);
-        });
+    async function initFlags() {
+        try {
+            const response = await fetch('https://flagcdn.com/en/codes.json');
+            const data = await response.json();
+            allCountries = Object.entries(data).map(([code, name]) => ({ name, code }));
+        } catch (e) {}
     }
 
-    presetDisplay.onclick = (e) => {
-        e.stopPropagation();
-        resultsBox.style.display = resultsBox.style.display === 'block' ? 'none' : 'block';
+    flagSearchInput.oninput = () => {
+        const query = flagSearchInput.value.toLowerCase();
+        if (!query) { flagResults.style.display = 'none'; return; }
+        const filtered = allCountries.filter(c => c.name.toLowerCase().includes(query)).slice(0, 8);
+        flagResults.innerHTML = '';
+        filtered.forEach(c => {
+            const div = document.createElement('div');
+            div.style.padding = "10px 20px";
+            div.style.cursor = "pointer";
+            div.style.color = "white";
+            div.style.borderBottom = "1px solid rgba(255,255,255,0.1)";
+            div.innerHTML = `<img src="https://flagcdn.com/w40/${c.code}.png" style="width:24px; margin-right:15px"><span>${c.name}</span>`;
+            div.onclick = () => {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    downloadBtn.style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                };
+                img.src = `https://flagcdn.com/w640/${c.code}.png`;
+                flagResults.style.display = 'none';
+            };
+            flagResults.appendChild(div);
+        });
+        flagResults.style.display = 'block';
     };
 
-    upload.onchange = (e) => {
+    document.getElementById('upload').onchange = (e) => {
         const reader = new FileReader();
         reader.onload = (event) => {
             const img = new Image();
@@ -324,7 +329,14 @@
         reader.readAsDataURL(e.target.files[0]);
     };
 
-    initPresets();
+    downloadBtn.onclick = () => {
+        const link = document.createElement('a');
+        link.download = 'mapify-export.png';
+        link.href = canvas.toDataURL();
+        link.click();
+    };
+
+    initFlags();
 </script>
 </body>
 </html>
