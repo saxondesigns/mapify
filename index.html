@@ -171,6 +171,9 @@
 
         .version-tag { position: fixed; bottom: 20px; right: 30px; font-size: 0.8rem; color: var(--apple-secondary); opacity: 0.6; }
 
+        /* WATERMARK STYLE */
+        .watermark-controls { margin-top: 25px; display: flex; flex-direction: column; align-items: center; }
+
         @media (max-width: 768px) {
             #sidebar { bottom: 0; height: 70px; width: 100vw; flex-direction: row; border-right: none; border-top: 1px solid var(--apple-border); padding: 0; justify-content: space-around; }
             #main-wrapper { margin-left: 0; width: 100%; padding: 40px 15px 120px; }
@@ -212,6 +215,9 @@
 
         <div id="canvas-container">
             <canvas id="mainCanvas"></canvas>
+            <div class="watermark-controls">
+                <input type="text" id="watermark-input" class="flag-search-bar" placeholder="Enter watermark text..." style="max-width: 300px; padding: 12px; font-size: 0.9rem; margin-bottom: 15px;">
+            </div>
             <button id="download-btn">Save Image</button>
         </div>
     </div>
@@ -283,6 +289,7 @@
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
     const downloadBtn = document.getElementById('download-btn');
+    const watermarkInput = document.getElementById('watermark-input');
 
     let activeTexture = new Image();
     let shadowSettings = { blur: 18, ox: 7.07, oy: 7.07 };
@@ -401,20 +408,40 @@
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.clearRect(0,0,canvas.width, canvas.height);
+        
+        // Draw main image with shadow
         ctx.shadowBlur = shadowSettings.blur;
         ctx.shadowOffsetX = shadowSettings.ox;
         ctx.shadowOffsetY = shadowSettings.oy;
         ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
         ctx.drawImage(img, 0, 0);
+        
+        // Draw Texture
         ctx.shadowColor = "transparent";
         ctx.save();
         ctx.globalAlpha = 0.5;
         ctx.globalCompositeOperation = 'source-atop';
         if (activeTexture.complete && activeTexture.src) ctx.drawImage(activeTexture, 0, 0, canvas.width, canvas.height);
         ctx.restore();
+
+        // WATERMARK DRAWING
+        if (watermarkInput.value) {
+            ctx.save();
+            const fontSize = Math.floor(canvas.height / 20);
+            ctx.font = `bold ${fontSize}px 'Poppins'`;
+            ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+            ctx.textAlign = "right";
+            ctx.fillText(watermarkInput.value, canvas.width - 20, canvas.height - 20);
+            ctx.restore();
+        }
+
         downloadBtn.style.display = 'block';
         if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
+    watermarkInput.oninput = () => {
+        if (currentBaseImage) processImage(currentBaseImage, false);
+    };
 
     presetDisplay.onclick = (e) => {
         e.stopPropagation();
