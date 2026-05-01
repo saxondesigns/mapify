@@ -84,51 +84,46 @@
             padding: 4rem; 
             border-radius: 32px; 
             box-shadow: 0 30px 60px rgba(0,0,0,0.6); 
-            max-width: 800px; 
+            max-width: 900px; 
             width: 100%; 
             text-align: center; 
             border: 1px solid var(--apple-border);
-            margin-bottom: 120px; 
+            margin-bottom: 100px; 
             animation: fadeInUp 0.8s ease-out;
         }
 
         h1 { color: var(--apple-text); margin-bottom: 10px; font-size: 4rem; letter-spacing: -2px; font-weight: 800; }
         .tagline { color: var(--apple-secondary); font-size: 1.2rem; font-weight: 500; margin-bottom: 3rem; }
 
-        /* Watermark Lab */
+        /* Separate Watermark Lab Section */
         .lab-section {
-            background: rgba(44, 44, 46, 0.5);
-            border-radius: 20px;
-            padding: 25px;
-            margin-top: 30px;
-            text-align: left;
+            background: rgba(28, 28, 30, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 4rem;
+            max-width: 900px;
+            width: 100%;
             border: 1px solid var(--apple-border);
+            margin-bottom: 100px;
+            text-align: left;
         }
-        .lab-header { font-weight: 700; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .lab-header { font-size: 2.5rem; font-weight: 800; color: var(--apple-text); margin-bottom: 30px; display: flex; align-items: center; gap: 15px; }
         .lab-input { 
-            width: 100%; padding: 10px; background: #1c1c1e; border: 1px solid var(--apple-border); 
-            border-radius: 8px; color: white; outline: none; box-sizing: border-box; margin-bottom: 10px;
+            width: 100%; padding: 15px; background: #1c1c1e; border: 1px solid var(--apple-border); 
+            border-radius: 12px; color: white; outline: none; box-sizing: border-box; margin-bottom: 20px; font-size: 1rem;
         }
-        .lab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .control-group label { display: block; font-size: 0.8rem; color: var(--apple-secondary); margin-bottom: 5px; }
+        .lab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .control-group label { display: block; font-size: 0.85rem; color: var(--apple-secondary); margin-bottom: 8px; font-weight: 600; }
 
-        /* Canvas & Controls */
-        #canvas-container { 
-            margin: 40px auto; border-radius: 24px; background: #121212; padding: 15px;
-            box-shadow: 0 0 0 1px var(--apple-border), 0 20px 40px rgba(0,0,0,0.4);
-            max-width: 90%;
+        /* Presets */
+        .preset-container { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        .preset-btn { 
+            background: #2c2c2e; border: 1px solid var(--apple-border); color: white; 
+            padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; transition: 0.3s;
         }
-        canvas { border-radius: 14px; max-width: 100%; height: auto; display: block; margin: 0 auto; }
-        
-        button#download-btn { 
-            background: var(--primary); border: none; padding: 18px 40px; color: white; 
-            cursor: pointer; border-radius: 35px; font-weight: 700; font-size: 1rem;
-            transition: transform 0.2s, background 0.3s; display: none; margin: 20px auto 0;
-        }
-        button#download-btn:hover { background: #00b345; transform: scale(1.05); }
+        .preset-btn:hover { background: var(--primary); border-color: var(--primary); }
 
-        /* Global Assets Section */
-        .section-container { max-width: 1200px; width: 100%; text-align: center; margin-bottom: 120px; }
+        /* Assets */
         .section-header { font-size: 3rem; color: var(--apple-text); margin-bottom: 40px; font-weight: 800; }
         .flag-search-bar {
             width: 100%; max-width: 600px; padding: 20px 30px;
@@ -136,72 +131,49 @@
             color: var(--apple-text); font-family: inherit; text-align: center; font-size: 1.1rem;
         }
         #flag-results { 
-            position: absolute; width: 100%; background: #2c2c2e; border-radius: 16px; 
-            top: calc(100% + 10px); z-index: 100; box-shadow: 0 20px 40px rgba(0,0,0,0.4); 
-            display: none; text-align: left; max-height: 400px; overflow-y: auto;
+            position: absolute; width: 100%; max-width: 600px; background: #2c2c2e; border-radius: 16px; 
+            top: calc(100% + 10px); z-index: 100; display: none; text-align: left; max-height: 300px; overflow-y: auto;
         }
-        .channel-item { display: flex; align-items: center; padding: 14px 20px; gap: 15px; cursor: pointer; border-bottom: 1px solid var(--apple-border); color: var(--apple-text); transition: background 0.2s; }
+        .channel-item { display: flex; align-items: center; padding: 14px 20px; gap: 15px; cursor: pointer; border-bottom: 1px solid var(--apple-border); color: var(--apple-text); }
         .channel-item:hover { background: #3a3a3c; }
+
+        /* Reviews */
+        .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 1000px; width: 100%; margin-bottom: 100px; }
+        .review-card { background: rgba(28, 28, 30, 0.6); padding: 25px; border-radius: 24px; border: 1px solid var(--apple-border); text-align: left; }
+        .review-user { font-weight: 700; color: var(--primary); margin-bottom: 5px; display: block; }
+        .review-text { color: var(--apple-secondary); font-size: 0.95rem; line-height: 1.5; }
+
+        /* Canvas */
+        #canvas-container { margin: 40px auto; border-radius: 24px; background: #121212; padding: 15px; position: relative; }
+        canvas { border-radius: 14px; max-width: 100%; height: auto; display: block; margin: 0 auto; }
+        button#download-btn { background: var(--primary); border: none; padding: 18px 40px; color: white; cursor: pointer; border-radius: 35px; font-weight: 700; display: none; margin: 20px auto; }
 
         .version-tag { position: fixed; bottom: 20px; right: 30px; font-size: 0.8rem; color: var(--apple-secondary); opacity: 0.6; }
 
         @media (max-width: 768px) {
             #sidebar { bottom: 0; height: 70px; width: 100vw; flex-direction: row; border-right: none; border-top: 1px solid var(--apple-border); padding: 0; justify-content: space-around; }
             #main-wrapper { margin-left: 0; width: 100%; padding: 40px 15px 120px; }
-            h1 { font-size: 2.8rem; }
         }
     </style>
 </head>
 <body>
 
 <aside id="sidebar">
-    <div class="sidebar-header"><i class="fa-solid fa-map-location-dot"></i></div>
+    <div class="sidebar-header"><i class="fa-solid fa-map"></i></div>
     <a href="#" class="nav-link"><i class="fa-solid fa-house"></i><span>Home</span></a>
+    <a href="#assets" class="nav-link"><i class="fa-solid fa-flag"></i><span>Assets</span></a>
     <a href="#lab" class="nav-link"><i class="fa-solid fa-signature"></i><span>Watermark Lab</span></a>
-    <a href="#flags-anchor" class="nav-link"><i class="fa-solid fa-flag"></i><span>Assets</span></a>
-    <a href="https://youtube.com/@SaxonMapper" target="_blank" class="nav-link"><i class="fa-brands fa-youtube"></i><span>YouTube</span></a>
+    <a href="#reviews" class="nav-link"><i class="fa-solid fa-star"></i><span>Reviews</span></a>
 </aside>
 
 <div id="main-wrapper">
     <div class="container">
         <h1>Mapify</h1>
         <p class="tagline">Professional flag maps in seconds.</p>
-        
-        <div class="controls">
-            <input type="file" id="upload" accept="image/*" style="display: none;">
-            <label for="upload" style="cursor: pointer; color: var(--primary); font-weight: 700; font-size: 1.1rem; border: 2px solid var(--primary); padding: 10px 20px; border-radius: 12px;">
-                <i class="fa-solid fa-cloud-arrow-up" style="margin-right: 8px;"></i>Upload Base Map
-            </label>
-        </div>
-
-        <!-- Watermark Lab Restored -->
-        <div id="lab" class="lab-section">
-            <div class="lab-header"><i class="fa-solid fa-vial"></i> Watermark Lab</div>
-            <div class="control-group">
-                <label>Watermark Text</label>
-                <input type="text" id="wm-text" class="lab-input" placeholder="e.g. @SaxonMapper">
-            </div>
-            <div class="lab-grid">
-                <div class="control-group">
-                    <label>Opacity (%)</label>
-                    <input type="number" id="wm-opacity" class="lab-input" value="50" min="0" max="100">
-                </div>
-                <div class="control-group">
-                    <label>Font Size (px)</label>
-                    <input type="number" id="wm-size" class="lab-input" value="40">
-                </div>
-            </div>
-            <div class="lab-grid">
-                <div class="control-group">
-                    <label>X Offset (px)</label>
-                    <input type="number" id="wm-x" class="lab-input" value="20">
-                </div>
-                <div class="control-group">
-                    <label>Y Offset (px)</label>
-                    <input type="number" id="wm-y" class="lab-input" value="20">
-                </div>
-            </div>
-        </div>
+        <input type="file" id="upload" accept="image/*" style="display: none;">
+        <label for="upload" style="cursor: pointer; color: var(--primary); font-weight: 700; font-size: 1.1rem; border: 2px solid var(--primary); padding: 12px 24px; border-radius: 12px;">
+            <i class="fa-solid fa-upload"></i> Upload Base Map
+        </label>
 
         <div id="canvas-container">
             <canvas id="mainCanvas"></canvas>
@@ -210,12 +182,79 @@
     </div>
 
     <!-- Assets Section -->
-    <div id="flags-anchor"></div>
-    <section class="section-container">
-        <h2 class="section-header">Global Asset Library</h2>
-        <div style="display: flex; justify-content: center; position: relative;">
+    <section id="assets" class="section-container" style="text-align: center; margin-bottom: 100px; width: 100%;">
+        <h2 class="section-header">Asset Library</h2>
+        <div style="display: flex; justify-content: center; position: relative; width: 100%;">
             <input type="text" id="flag-search" class="flag-search-bar" placeholder="Search modern or historical flags...">
             <div id="flag-results"></div>
+        </div>
+    </section>
+
+    <!-- Watermark Lab (Now Separate) -->
+    <section id="lab" class="lab-section">
+        <div class="lab-header"><i class="fa-solid fa-vial"></i> Watermark Lab</div>
+        
+        <label style="color: var(--apple-secondary); font-size: 0.8rem; font-weight: 700; margin-bottom: 10px; display: block;">QUICK PRESETS</label>
+        <div class="preset-container">
+            <button class="preset-btn" onclick="applyPreset('@SaxonMapper', 40, 20, 20, 60, 4, 'Poppins')">Default</button>
+            <button class="preset-btn" onclick="applyPreset('ITAE', 50, 30, 30, 80, 8, 'SF Pro Display')">ITAE Style</button>
+            <button class="preset-btn" onclick="applyPreset('Willdude', 35, 15, 15, 40, 2, 'Arial')">Willdude</button>
+        </div>
+
+        <div class="control-group">
+            <label>Watermark Text</label>
+            <input type="text" id="wm-text" class="lab-input" placeholder="@SaxonMapper">
+        </div>
+
+        <div class="lab-grid">
+            <div class="control-group">
+                <label>Font Size (px)</label>
+                <input type="number" id="wm-size" class="lab-input" value="40">
+            </div>
+            <div class="control-group">
+                <label>Opacity (%)</label>
+                <input type="number" id="wm-opacity" class="lab-input" value="50" min="0" max="100">
+            </div>
+            <div class="control-group">
+                <label>X Offset (px)</label>
+                <input type="number" id="wm-x" class="lab-input" value="20">
+            </div>
+            <div class="control-group">
+                <label>Y Offset (px)</label>
+                <input type="number" id="wm-y" class="lab-input" value="20">
+            </div>
+            <div class="control-group">
+                <label>Shadow Blur</label>
+                <input type="number" id="wm-blur" class="lab-input" value="4">
+            </div>
+            <div class="control-group">
+                <label>Font Family</label>
+                <select id="wm-font" class="lab-input" style="background: #1c1c1e;">
+                    <option value="Poppins">Poppins</option>
+                    <option value="SF Pro Display">SF Pro</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Impact">Impact</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section id="reviews" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+        <h2 class="section-header">Creator Reviews</h2>
+        <div class="reviews-grid">
+            <div class="review-card">
+                <span class="review-user">@Vandivier</span>
+                <p class="review-text">"Mapify saved my workflow. The historical flag library is insane for my mapping edits."</p>
+            </div>
+            <div class="review-card">
+                <span class="review-user">@Willdude</span>
+                <p class="review-text">"Clean UI and the custom watermark settings are choice. 10/10 tool."</p>
+            </div>
+            <div class="review-card">
+                <span class="review-user">@ITAE</span>
+                <p class="review-text">"The drop shadow and opacity controls are exactly what I needed for high-quality shorts."</p>
+            </div>
         </div>
     </section>
 </div>
@@ -226,85 +265,97 @@
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
     const downloadBtn = document.getElementById('download-btn');
-    const flagSearchInput = document.getElementById('flag-search');
+    const flagSearch = document.getElementById('flag-search');
     const flagResults = document.getElementById('flag-results');
-    
-    // Lab Inputs
-    const wmInputs = [
-        document.getElementById('wm-text'),
-        document.getElementById('wm-opacity'),
-        document.getElementById('wm-size'),
-        document.getElementById('wm-x'),
-        document.getElementById('wm-y')
-    ];
 
-    let currentBaseImage = null;
-    let allCountries = [];
+    const inputs = {
+        text: document.getElementById('wm-text'),
+        size: document.getElementById('wm-size'),
+        opacity: document.getElementById('wm-opacity'),
+        x: document.getElementById('wm-x'),
+        y: document.getElementById('wm-y'),
+        blur: document.getElementById('wm-blur'),
+        font: document.getElementById('wm-font')
+    };
+
+    let currentImg = null;
+    let countries = [];
 
     async function init() {
         try {
             const res = await fetch('https://flagcdn.com/en/codes.json');
             const data = await res.json();
-            allCountries = Object.entries(data).map(([code, name]) => ({ name, code }));
-        } catch (e) {}
+            countries = Object.entries(data).map(([code, name]) => ({ code, name }));
+        } catch(e) {}
+    }
+
+    function applyPreset(text, size, x, y, opacity, blur, font) {
+        inputs.text.value = text;
+        inputs.size.value = size;
+        inputs.x.value = x;
+        inputs.y.value = y;
+        inputs.opacity.value = opacity;
+        inputs.blur.value = blur;
+        inputs.font.value = font;
+        render();
     }
 
     function render() {
-        if (!currentBaseImage) return;
-        canvas.width = currentBaseImage.width;
-        canvas.height = currentBaseImage.height;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(currentBaseImage, 0, 0);
-        
-        const text = wmInputs[0].value;
-        if (text) {
+        if (!currentImg) return;
+        canvas.width = currentImg.width;
+        canvas.height = currentImg.height;
+        ctx.drawImage(currentImg, 0, 0);
+
+        if (inputs.text.value) {
             ctx.save();
-            ctx.globalAlpha = wmInputs[1].value / 100;
-            ctx.font = `bold ${wmInputs[2].value}px 'Poppins'`;
+            ctx.globalAlpha = inputs.opacity.value / 100;
+            ctx.font = `bold ${inputs.size.value}px ${inputs.font.value}`;
             ctx.fillStyle = "white";
-            ctx.textAlign = "left";
+            ctx.shadowColor = "black";
+            ctx.shadowBlur = parseInt(inputs.blur.value);
             ctx.textBaseline = "bottom";
-            ctx.fillText(text, parseInt(wmInputs[3].value), canvas.height - parseInt(wmInputs[4].value));
+            ctx.fillText(inputs.text.value, parseInt(inputs.x.value), canvas.height - parseInt(inputs.y.value));
             ctx.restore();
         }
         downloadBtn.style.display = 'block';
     }
 
-    wmInputs.forEach(el => el.addEventListener('input', render));
+    Object.values(inputs).forEach(el => el.addEventListener('input', render));
 
-    flagSearchInput.oninput = async () => {
-        const query = flagSearchInput.value.toLowerCase();
-        if (query.length < 2) { flagResults.style.display = 'none'; return; }
+    flagSearch.oninput = () => {
+        const q = flagSearch.value.toLowerCase();
+        if (q.length < 2) { flagResults.style.display = 'none'; return; }
         flagResults.innerHTML = '';
         flagResults.style.display = 'block';
-
-        allCountries.filter(c => c.name.toLowerCase().includes(query)).slice(0, 5).forEach(c => {
+        countries.filter(c => c.name.toLowerCase().includes(q)).slice(0, 6).forEach(c => {
             const div = document.createElement('div');
             div.className = 'channel-item';
-            div.innerHTML = `<img src="https://flagcdn.com/w40/${c.code}.png" style="width:24px"><span>${c.name}</span>`;
-            div.onclick = () => loadImg(`https://flagcdn.com/w640/${c.code}.png`);
+            div.innerHTML = `<img src="https://flagcdn.com/w40/${c.code}.png" width="24"><span>${c.name}</span>`;
+            div.onclick = () => {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.src = `https://flagcdn.com/w1280/${c.code}.png`;
+                img.onload = () => { currentImg = img; render(); flagResults.style.display = 'none'; };
+            };
             flagResults.appendChild(div);
         });
     };
 
-    function loadImg(url) {
-        const img = new Image();
-        img.crossOrigin = "anonymous";
-        img.onload = () => { currentBaseImage = img; render(); flagResults.style.display = 'none'; };
-        img.src = url;
-    }
-
     document.getElementById('upload').onchange = (e) => {
         const reader = new FileReader();
-        reader.onload = (event) => loadImg(event.target.result);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => { currentImg = img; render(); };
+            img.src = event.target.result;
+        };
         reader.readAsDataURL(e.target.files[0]);
     };
 
     downloadBtn.onclick = () => {
-        const link = document.createElement('a');
-        link.download = 'mapify-v2.8.5.png';
-        link.href = canvas.toDataURL();
-        link.click();
+        const a = document.createElement('a');
+        a.download = `Mapify_${Date.now()}.png`;
+        a.href = canvas.toDataURL();
+        a.click();
     };
 
     init();
