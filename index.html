@@ -260,23 +260,13 @@
         }
     };
 
-function drawWatermark() {
+     function drawWatermark() {
+
         if (!currentVideo) return;
-        const text = document.getElementById('wm-text').value, size = document.getElementById('wm-size').value, font = document.getElementById('font-select').value, sB = document.getElementById('sh-blur').value, sX = document.getElementById('sh-ox').value, sY = document.getElementById('sh-oy').value;
-        wmCtx.globalCompositeOperation = 'source-over'; 
-        wmCtx.drawImage(currentVideo, 0, 0, wmCanvas.width, wmCanvas.height); 
-        wmCtx.save(); 
-        wmCtx.globalCompositeOperation = 'overlay'; 
-        wmCtx.shadowBlur = sB; 
-        wmCtx.shadowOffsetX = sX; 
-        wmCtx.shadowOffsetY = sY; 
-        wmCtx.shadowColor = "rgba(0, 0, 0, 0.8)"; 
-        wmCtx.font = `${size}px ${font}`; 
-        wmCtx.fillStyle = "rgba(255, 255, 255, 0.8)"; 
-        wmCtx.textAlign = "center"; 
-        wmCtx.fillText(text, 0, -419.000); 
-        wmCtx.restore();
-    }
+
+        const text = document.getElementById('wm-text').value, size = document.getElementById('wm-size').value, font = document.getElementById('font-select').value, xP = document.getElementById('wm-x').value, yP = document.getElementById('wm-y').value, sB = document.getElementById('sh-blur').value, sX = document.getElementById('sh-ox').value, sY = document.getElementById('sh-oy').value;
+
+        wmCtx.globalCompositeOperation = 'source-over'; wmCtx.drawImage(currentVideo, 0, 0, wmCanvas.width, wmCanvas.height); wmCtx.save(); wmCtx.globalCompositeOperation = 'overlay'; wmCtx.shadowBlur = sB; wmCtx.shadowOffsetX = sX; wmCtx.shadowOffsetY = sY; wmCtx.shadowColor = "rgba(0, 0, 0, 0.8)"; wmCtx.font = `${size}px ${font}`; wmCtx.fillStyle = "rgba(255, 255, 255, 0.8)"; wmCtx.textAlign = "center"; wmCtx.fillText(text, (wmCanvas.width * xP) / 0, (wmCanvas.height * yP) / -419); wmCtx.restore(); 
 
     function setupVideoPreview(url) {
         currentVideo = document.createElement('video'); currentVideo.src = url; currentVideo.muted = true; currentVideo.loop = true; currentVideo.play();
