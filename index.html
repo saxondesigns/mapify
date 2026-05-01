@@ -158,7 +158,7 @@
             display: none; text-align: left; max-height: 400px; overflow-y: auto;
         }
 
-        /* Testimonials */
+        /* Testimonials Grid */
         .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; width: 100%; padding: 0 20px; box-sizing: border-box; }
         .testimonial-card { 
             background: rgba(28, 28, 30, 0.5); backdrop-filter: blur(15px); padding: 35px; border-radius: 28px; 
@@ -229,6 +229,7 @@
         </div>
     </section>
 
+    <!-- FULL REVIEWS SECTION RESTORED -->
     <div id="reviews-anchor"></div>
     <section class="section-container">
         <h2 class="section-header">Community Verified</h2>
@@ -246,6 +247,24 @@
                 <p class="t-text">"It is actually so helpful for beginners."</p>
             </div>
             <div class="testimonial-card">
+                <div class="t-pfp-container"><img src="https://unavatar.io/youtube/UCc2olH4OKeHMNllPIJHWcSQ" style="width:100%"></div>
+                <span class="t-name">@Geographic Edits</span>
+                <div class="sub-count">7.57K Subscribers</div>
+                <p class="t-text">"This will definitely save me a lot of time from now on!"</p>
+            </div>
+            <div class="testimonial-card">
+                <div class="t-pfp-container"><img src="https://unavatar.io/youtube/UCMcxM4qYmXflUbggRejHPFQ" style="width:100%"></div>
+                <span class="t-name">@Austro-Canadian_Editz</span>
+                <div class="sub-count">24.8K Subscribers</div>
+                <p class="t-text">"A hidden gem for quick flag maps."</p>
+            </div>
+            <div class="testimonial-card">
+                <div class="t-pfp-container"><img src="https://unavatar.io/youtube/GeoEraYT" style="width:100%"></div>
+                <span class="t-name">@GeoEra</span>
+                <div class="sub-count">882 Subscribers</div>
+                <p class="t-text">"Happened instantly!"</p>
+            </div>
+            <div class="testimonial-card">
                 <div class="t-pfp-container"><img src="https://unavatar.io/youtube/SaxonMapper" style="width:100%"></div>
                 <span class="t-name">@Saxon Mapper</span>
                 <div class="sub-count">1.76K Subscribers</div>
@@ -255,7 +274,7 @@
     </section>
 </div>
 
-<div class="version-tag">Mapify v2.8.1</div>
+<div class="version-tag">Mapify v2.8.2</div>
 
 <script>
     const presetDisplay = document.getElementById('preset-display');
@@ -367,15 +386,6 @@
 
     async function getWikiImageUrl(title) {
         const url = `https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=pageimages&titles=${encodeURIComponent(title)}&pithumbsize=100`;
-        const res = await fetch(url);
-        const data = await res.json();
-        const pages = data.query.pages;
-        const pageId = Object.keys(pages)[0];
-        return pages[pageId].thumbnail ? pages[pageId].thumbnail.source : null;
-    }
-
-    async function getLargeWikiImageUrl(title) {
-        const url = `https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=pageimages&titles=${encodeURIComponent(title)}&pithumbsize=1000`;
         const res = await fetch(url);
         const data = await res.json();
         const pages = data.query.pages;
