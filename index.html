@@ -321,31 +321,39 @@ function selectPreset(p, logoUrl) {
     async function addHistoricalResult(t) { const thumb = await getWikiImg(t, 100); if (!thumb) return; const div = document.createElement('div'); div.className = 'channel-item'; div.innerHTML = `<img src="${thumb}" style="width:24px"><span>${t}</span>`; div.onclick = async () => { const full = await getWikiImg(t, 1200); if (full) loadImg(full, t); }; flagResults.appendChild(div); }
     async function getWikiImg(t, s) { try { const r = await fetch(`https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=pageimages&titles=${encodeURIComponent(t)}&pithumbsize=${s}`), d = await r.json(), p = d.query.pages, id = Object.keys(p)[0]; return p[id].thumbnail ? p[id].thumbnail.source : null; } catch(e){return null;} }
     function loadImg(url, name) { const img = new Image(); img.crossOrigin = "anonymous"; img.onload = () => { processImage(img); flagResults.style.display = 'none'; flagSearchInput.value = name; }; img.src = url; }
-    function processImage(img, scroll = true) { 
-    currentBaseImage = img; 
-    canvas.width = img.width; 
-    canvas.height = img.height; 
-    
+function processImage(img, scroll = true) {
+    currentBaseImage = img;
+    canvas.width = img.width;
+    canvas.height = img.height;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    ctx.save();
-    ctx.shadowBlur = shadowSettings.blur; 
-    ctx.shadowOffsetX = shadowSettings.ox; 
-    ctx.shadowOffsetY = shadowSettings.oy; 
-    ctx.shadowColor = "rgba(0, 0, 0, 0.7)"; 
-    ctx.drawImage(img, 0, 0); 
-    ctx.restore(); 
-    
+
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCanvas.width = img.width;
+    tempCanvas.height = img.height;
+
+    tempCtx.drawImage(img, 0, 0);
+
     if (activeTexture.complete && activeTexture.src) {
-        ctx.save();
-        ctx.globalCompositeOperation = 'source-atop';
-        ctx.globalAlpha = 1.0; 
-        ctx.drawImage(activeTexture, 0, 0, canvas.width, canvas.height);
-        ctx.restore();
+        tempCtx.save();
+        tempCtx.globalCompositeOperation = 'source-atop';
+        tempCtx.globalAlpha = 1.0;
+        tempCtx.drawImage(activeTexture, 0, 0, img.width, img.height);
+        tempCtx.restore();
     }
+
+    ctx.save();
+    ctx.shadowBlur = shadowSettings.blur;
+    ctx.shadowOffsetX = shadowSettings.ox;
+    ctx.shadowOffsetY = shadowSettings.oy;
+    ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
     
-    downloadBtn.style.display = 'block'; 
-    if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' }); 
+    ctx.drawImage(tempCanvas, 0, 0);
+    ctx.restore();
+
+    downloadBtn.style.display = 'block';
+    if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
 }
     presetDisplay.onclick = (e) => { e.stopPropagation(); resultsBox.style.display = resultsBox.style.display === 'block' ? 'none' : 'block'; };
     window.onclick = () => { resultsBox.style.display = 'none'; flagResults.style.display = 'none'; };
